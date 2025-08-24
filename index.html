@@ -3,33 +3,41 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Template</title>
+  <title>C4C-Game</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
     integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" />
 </head>
 
 <body>
+  <header>
+    Mysterious Header
+  </header>
+  <main>
+
   <nav id="navbar" class="navbar navbar-dark bg-dark">
-    <a id="brand" class="navbar-brand" href="index.html">C4C Phaser Template</a>
+    <a id="brand" class="navbar-brand" >C4C Game Title Here</a>
     <ul class="nav me-auto">
       <li class="nav-item">
-        <button id="switch-scene" type="button" class="btn btn-primary" style = "margin-right:10px">Switch Scene</button>
-
+        <button id="log-book" type="button" class="btn btn-primary" style = "margin-right:10px">Guidebook</button>
+        <button id="market" type="button" class="btn btn-primary" style = "margin-right:10px">Market</button>
       </li>  
       <li class="nav-item">
-        <button id="run-code" type="button" class="btn btn-success">Run Commands</button>
+        <button id="run-code" type="button" class="btn btn-success">Run Code</button>
       </li>
     </ul>
   </nav>
   <br>
   <div class="container">
-    <p>
-      Maybe there are some instructions here?
+    <!-- <h1>Header Text</h1> -->
+    <p class = "gameText">
+      Type your code below:
     </p>
   </div>
+
   <div id="main_view" class="d-flex">
     <div id="code-editor"></div>  
     <div id="game-container"></div>
   </div>
+</main>
 </body>
 </html>
