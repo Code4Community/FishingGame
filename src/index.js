@@ -2,11 +2,11 @@
 import C4C from 'c4c-lib';
 import Phaser from 'phaser';
 import MainGame from './scenes/mainGame';
-import Guidebook from './scenes/guidebook';
+import TackleBox from './scenes/tacklebox';
+import Badges from './scenes/badges';
 
 // Load style.css into our page
-import './assets/style.css'
-
+import './assets/style.css';
 
 // Constants, sizes
     const gameWidth = 800;
@@ -42,7 +42,7 @@ const config = {
     // Where the game is located (id of the DOM element)
     parent: 'game-container',
     // All the scenes in the game
-    scene: [MainGame, Guidebook]
+    scene: [MainGame, TackleBox, Badges]
 }
 
 const game = new Phaser.Game(config);
@@ -58,17 +58,38 @@ const gameLoopSpeed = 1000;
 var gameLoop;
 
 
-// Switch the scene whenever the "Log Book" button is pressed
-document.getElementById('log-book').addEventListener('click', () => {
+// Switch the scene whenever the "Tackle Box" button is pressed
+document.getElementById('tackle-box').addEventListener('click', () => {
     // Stop running any code that's currently running
     codeRunner.reset();
     clearInterval(gameLoop);
-    // If the current scene is mainGame.js, switch to guidebook.js
+    // If the current scene is mainGame.js, or badges.js, switch to tacklebox.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
-        game.scene.start('Guidebook');
+        game.scene.start('TackleBox');
+    } else if(game.scene.isActive('Badges')){
+        game.scene.stop('Badges');
+        game.scene.start('TackleBox');
     } else {
-        game.scene.stop('Guidebook');
+        game.scene.stop('TackleBox');
+        game.scene.start('MainGame');
+    }
+});
+
+// Switch the scene whenever the "Badges" button is pressed
+document.getElementById('badges').addEventListener('click', () => {
+    // Stop running any code that's currently running
+    codeRunner.reset();
+    clearInterval(gameLoop);
+    // If the current scene is mainGame.js, or tacklebox.js, switch to badges.js
+    if (game.scene.isActive('MainGame')) {
+        game.scene.stop('MainGame');
+        game.scene.start('Badges');
+    } else if(game.scene.isActive('TackleBox')){
+        game.scene.stop('TackleBox');
+        game.scene.start('Badges');
+    } else {
+        game.scene.stop('Badges');
         game.scene.start('MainGame');
     }
 });
@@ -99,34 +120,5 @@ document.getElementById('run-code').addEventListener('click', () => {
     gameLoop = setInterval(() => codeRunner.step(), gameLoopSpeed)
 });
 
-
-
-
-// // This is a flag to determine whether or not the game should listen to keyboard events always.
-// // If false, the game will only listen to keyboard events when you click on the game window
-// const keyboardAlwaysActive = false;
-
-
-// game.input.keyboard.enabled = keyboardAlwaysActive;
-// game.input.keyboard.preventDefault = true;
-// game.input.keyboard.addCapture(['UP', 'DOWN', 'LEFT', 'RIGHT', 'SHIFT', 'SPACE']);
-
-// // Capture keyboard events when the game is in focus
-// document.getElementById('game-container').addEventListener('click', () => {
-//     game.input.keyboard.enabled = true;
-//     document.getElementById('game-container').classList.add('active');
-//     // Blur the code editor or any buttons that are currently active    
-//     document.activeElement.blur();
-// })
-
-// // Release keyboard events when the game is out of focus
-// document.addEventListener('click', (e) => {
-//     if (e.target.id === 'game-container' || e.target.parentNode.id === 'game-container') return;
-//     game.input.keyboard.enabled = keyboardAlwaysActive;
-//     document.getElementById('game-container').classList.remove('active');
-// })
-
-
-// // Export the game loop speed so that it can be used in the scene files
 
 export {gameLoopSpeed};

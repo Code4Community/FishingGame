@@ -1,8 +1,8 @@
 import C4C from 'c4c-lib';
 
-export default class Guidebook extends Phaser.Scene{
+export default class TackleBox extends Phaser.Scene{
     constructor(){
-        super('Guidebook');
+        super('TackleBox');
     }
 
     preload(){
@@ -10,7 +10,7 @@ export default class Guidebook extends Phaser.Scene{
     }
 
     create(){
-        C4C.Editor.setText(`// New Information\n:)\n`);
+        C4C.Editor.setText(`// Information about methods goes here\n:)\n`);
     }
 
     update(){
