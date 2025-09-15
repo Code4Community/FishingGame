@@ -26,26 +26,53 @@ export default class MainGame extends Phaser.Scene{
         this.boat.setCollideWorldBounds(true);
 
     // C4C default text
-        C4C.Editor.setText(`// Enter your code here!\n //Try adding more fish \nint redFish = 0;\n`);
+        C4C.Editor.setText(`// Enter your code here!\n`);
 
 
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
   
-    // // Define functions used in the written code
-    //     C4C.Interpreter.define('cast', (speed) => {
-    //         if (speed === undefined) {
-    //             speed = 100;
-    //         }
-    //         this.boat.setVelocityX(-speed);
-    //         // Stop after 1 game loop
-    //         setTimeout(() => {
-    //             try {
-    //                 this.boat.setVelocityX(0);
-    //             } catch (e){};
-    //         }, gameLoopSpeed);
-    //     })
+    // Define functions used in the written code----------------------------
+    C4C.Interpreter.define('moveRight', (speed) => {
+            if (speed === undefined) {
+                speed = 100;
+            }
+            this.boat.setVelocityX(speed);
+            // Stop after 1 game loop
+            setTimeout(() => {
+                // This could fail if we switch scenes
+                try {
+                    this.boat.setVelocityX(0);
+                } catch (e){};
+            }, gameLoopSpeed);
+        })
 
+        C4C.Interpreter.define('moveLeft', (speed) => {
+            if (speed === undefined) {
+                speed = 100;
+            }
+            this.boat.setVelocityX(-speed);
+            // Stop after 1 game loop
+            setTimeout(() => {
+                try {
+                    this.boat.setVelocityX(0);
+                } catch (e){};
+            }, gameLoopSpeed);
+        })
+        
+        C4C.Interpreter.define('cast', (speed) => {
+            if (speed === undefined) {
+                speed = 100;
+            }
+            this.boat.flipY;
+            // Stop after 1 game loop
+            setTimeout(() => {
+                try {
+                    this.boat.flipY;
+                } catch (e){};
+            }, gameLoopSpeed);
+        })
+        // ----------------------------------------------------------------
     }
 
     update(){
