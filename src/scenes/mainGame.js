@@ -8,7 +8,7 @@ export default class MainGame extends Phaser.Scene{
     constructor(){
         super('MainGame');
 
-        this.boatSpeed = 100;
+        this.speed = 100;
         
     }
 
@@ -33,32 +33,6 @@ export default class MainGame extends Phaser.Scene{
         this.cursor = this.input.keyboard.createCursorKeys();
   
     // Define functions used in the written code----------------------------
-    C4C.Interpreter.define('moveRight', (speed) => {
-            if (speed === undefined) {
-                speed = 100;
-            }
-            this.boat.setVelocityX(speed);
-            // Stop after 1 game loop
-            setTimeout(() => {
-                // This could fail if we switch scenes
-                try {
-                    this.boat.setVelocityX(0);
-                } catch (e){};
-            }, gameLoopSpeed);
-        })
-
-        C4C.Interpreter.define('moveLeft', (speed) => {
-            if (speed === undefined) {
-                speed = 100;
-            }
-            this.boat.setVelocityX(-speed);
-            // Stop after 1 game loop
-            setTimeout(() => {
-                try {
-                    this.boat.setVelocityX(0);
-                } catch (e){};
-            }, gameLoopSpeed);
-        })
         
         C4C.Interpreter.define('cast', (speed) => {
             if (speed === undefined) {

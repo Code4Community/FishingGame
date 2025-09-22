@@ -1,8 +1,8 @@
 import C4C from 'c4c-lib';
 
-export default class Badges extends Phaser.Scene{
+export default class Market extends Phaser.Scene{
     constructor(){
-        super('Badges');
+        super('Market');
     }
 
     preload(){
@@ -10,7 +10,7 @@ export default class Badges extends Phaser.Scene{
     }
 
     create(){
-        C4C.Editor.setText(`// Information about fish goes here\n:)\n`);
+        C4C.Editor.setText(`// You can buy things here\n$__\n`);
     }
 
     update(){

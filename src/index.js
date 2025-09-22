@@ -3,7 +3,8 @@ import C4C from 'c4c-lib';
 import Phaser from 'phaser';
 import MainGame from './scenes/mainGame';
 import TackleBox from './scenes/tacklebox';
-import Badges from './scenes/badges';
+import MyFish from './scenes/myfish';
+import Market from './scenes/market'
 
 // Load style.css into our page
 import './assets/style.css';
@@ -25,7 +26,7 @@ const theme = {
 // Create the C4C editor
 // The functions that you want the code editor to autocomplete
 // If you want to add more on the fly depending on the scene, you will have to create a new editor
-const autocompleteFunctions = ['moveRight', 'moveLeft', 'cast', 'addBait'];
+const autocompleteFunctions = ['cast', 'addBait'];
 C4C.Editor.create(document.getElementById('code-editor'), theme, false, autocompleteFunctions);
 
 // Create the game
@@ -42,7 +43,7 @@ const config = {
     // Where the game is located (id of the DOM element)
     parent: 'game-container',
     // All the scenes in the game
-    scene: [MainGame, TackleBox, Badges]
+    scene: [MainGame, TackleBox, MyFish, Market]
 }
 
 const game = new Phaser.Game(config);
@@ -63,12 +64,12 @@ document.getElementById('tackle-box').addEventListener('click', () => {
     // Stop running any code that's currently running
     codeRunner.reset();
     clearInterval(gameLoop);
-    // If the current scene is mainGame.js, or badges.js, switch to tacklebox.js
+    // If the current scene is mainGame.js, or myfish.js, switch to tacklebox.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
         game.scene.start('TackleBox');
-    } else if(game.scene.isActive('Badges')){
-        game.scene.stop('Badges');
+    } else if(game.scene.isActive('MyFish')){
+        game.scene.stop('MyFish');
         game.scene.start('TackleBox');
     } else {
         game.scene.stop('TackleBox');
@@ -76,24 +77,41 @@ document.getElementById('tackle-box').addEventListener('click', () => {
     }
 });
 
-// Switch the scene whenever the "Badges" button is pressed
-document.getElementById('badges').addEventListener('click', () => {
+// Switch the scene whenever the "My Fish" button is pressed
+document.getElementById('my-fish').addEventListener('click', () => {
     // Stop running any code that's currently running
     codeRunner.reset();
     clearInterval(gameLoop);
-    // If the current scene is mainGame.js, or tacklebox.js, switch to badges.js
+    // If the current scene is mainGame.js, or tacklebox.js, switch to myfish.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
-        game.scene.start('Badges');
+        game.scene.start('MyFish');
     } else if(game.scene.isActive('TackleBox')){
         game.scene.stop('TackleBox');
-        game.scene.start('Badges');
+        game.scene.start('MyFish');
     } else {
-        game.scene.stop('Badges');
+        game.scene.stop('MyFish');
         game.scene.start('MainGame');
     }
 });
 
+// Switch the scene whenever the "Market" button is pressed
+document.getElementById('market').addEventListener('click', () => {
+    // Stop running any code that's currently running
+    codeRunner.reset();
+    clearInterval(gameLoop);
+    // If the current scene is mainGame.js, or myfish.js, switch to tacklebox.js
+    if (game.scene.isActive('MainGame')) {
+        game.scene.stop('MainGame');
+        game.scene.start('Market');
+    } else if(game.scene.isActive('MyFish')){
+        game.scene.stop('MyFish');
+        game.scene.start('Market');
+    } else {
+        game.scene.stop('TackleBox');
+        game.scene.start('MainGame');
+    }
+});
 
 // Run the code whenever the "Run Code" button is pressed
 document.getElementById('run-code').addEventListener('click', () => {
