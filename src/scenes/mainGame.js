@@ -3,6 +3,7 @@ import { gameLoopSpeed } from '..';
 import background from '../assets/lake-testAsset.jpg';
 import boat from '../assets/testBoat.png';
 import Phaser from 'phaser';
+import hook from '../assets/hook-testAsset.png'
 
 export default class MainGame extends Phaser.Scene{
     constructor(){
@@ -15,6 +16,7 @@ export default class MainGame extends Phaser.Scene{
     preload(){
         this.load.image('background', background);
         this.load.image('boat', boat);
+        this.load.image('hook', hook);
 
     }
 
