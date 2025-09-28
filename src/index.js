@@ -4,7 +4,7 @@ import Phaser from 'phaser';
 import MainGame from './scenes/mainGame';
 import TackleBox from './scenes/tacklebox';
 import MyFish from './scenes/myfish';
-import Market from './scenes/market'
+import Market from './scenes/market';
 
 // Load style.css into our page
 import './assets/style.css';
@@ -135,7 +135,7 @@ document.getElementById('run-code').addEventListener('click', () => {
     // Restart the gameloop right now
     // Note phaser has a way to do a game loop that's probably better than this, I would look into using that instead maybe
     codeRunner.step();
-    gameLoop = setInterval(() => codeRunner.step(), gameLoopSpeed)
+    gameLoop = setInterval(() => codeRunner.step(), gameLoopSpeed);
 });
 
 
