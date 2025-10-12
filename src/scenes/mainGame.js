@@ -4,6 +4,7 @@ import background from '../assets/bkg.png';
 import Phaser from 'phaser';
 import hook from '../assets/hook-testAsset.png';
 import player from '../assets/raccoonAndBoat.png';
+import fish from '../assets/testFish.png';
 
 export default class MainGame extends Phaser.Scene{
     constructor(){
@@ -17,6 +18,7 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('background', background);
         this.load.image('hook', hook);
         this.load.image('player', player);
+        this.load.image('fish', fish);
 
     }
 
@@ -25,6 +27,10 @@ export default class MainGame extends Phaser.Scene{
         this.add.image(400, 300, 'background').setDisplaySize(800, 600);
         this.player = this.physics.add.sprite(400, 110, 'player').setDisplaySize(180,120);
         this.player.setCollideWorldBounds(true);
+        this.fish = this.physics.add.image(400, 200, 'fish').setDisplaySize(100, 50);
+        this.fish.setVelocity(-140, 0);
+        this.fish.setBounceX(1, 0);
+        this.fish.setCollideWorldBounds(true);
 
 
     // C4C default text
@@ -68,6 +74,21 @@ export default class MainGame extends Phaser.Scene{
             this.player.setVelocityX(0);
         }
 
-    // Functions
-}
+        if (this.fish.body.velocity.x < 0) {
+            this.fish.setFlipX(false); // facing right
+        } else if (this.fish.body.velocity.x > 0) {
+            this.fish.setFlipX(true); // facing left
+        }
+
+        // Fish movement
+        if (this.fish.body.blocked.left || this.fish.body.blocked.right) {
+            this.fish.setY(this.getRandomY());
+        }
+
+        // Functions
+    }
+
+    getRandomY = () => {
+        return Math.floor(Math.random() * (80)) + 185;
+    }
 }
