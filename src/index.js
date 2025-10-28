@@ -64,15 +64,33 @@ document.getElementById('tackle-box').addEventListener('click', () => {
     // Stop running any code that's currently running
     codeRunner.reset();
     clearInterval(gameLoop);
-    // If the current scene is mainGame.js, or myfish.js, switch to tacklebox.js
+    // If the current scene is mainGame.js, myfish.js, or market.js, switch to tacklebox.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
         game.scene.start('TackleBox');
-    } else if(game.scene.isActive('MyFish')){
+    } else if(game.scene.isActive('MyFish')) {
         game.scene.stop('MyFish');
         game.scene.start('TackleBox');
-    } else {
+    } else if(game.scene.isActive('Market')) {
+        game.scene.stop('Market');
+        game.scene.start('TackleBox');
+    }
+});
+
+// Switch the scene whenever the "🎣" button is pressed
+document.getElementById('MainGame').addEventListener('click', () => {
+    // Stop running any code that's currently running
+    codeRunner.reset();
+    clearInterval(gameLoop);
+    // If the current scene is market.js, or tacklebox.js, or myfish.js, switch to MainGame
+    if(game.scene.isActive('TackleBox')){
         game.scene.stop('TackleBox');
+        game.scene.start('MainGame');
+    } else if (game.scene.isActive('Market')){
+        game.scene.stop('Market')
+        game.scene.start('MainGame')
+    } else if (game.scene.isActive('MyFish')){
+        game.scene.stop('MyFish');
         game.scene.start('MainGame');
     }
 });
@@ -82,16 +100,16 @@ document.getElementById('my-fish').addEventListener('click', () => {
     // Stop running any code that's currently running
     codeRunner.reset();
     clearInterval(gameLoop);
-    // If the current scene is mainGame.js, or tacklebox.js, switch to myfish.js
+    // If the current scene is mainGame.js, tacklebox.js, or market switch to myfish.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
         game.scene.start('MyFish');
     } else if(game.scene.isActive('TackleBox')){
         game.scene.stop('TackleBox');
         game.scene.start('MyFish');
-    } else {
-        game.scene.stop('MyFish');
-        game.scene.start('MainGame');
+    } else if (game.scene.isActive('Market')){
+        game.scene.stop('Market');
+        game.scene.start('MyFish');
     }
 });
 
@@ -100,17 +118,17 @@ document.getElementById('market').addEventListener('click', () => {
     // Stop running any code that's currently running
     codeRunner.reset();
     clearInterval(gameLoop);
-    // If the current scene is mainGame.js, or myfish.js, switch to tacklebox.js
+    // If the current scene is mainGame.js, myfish.js, or tacklebox.js, switch to market.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
         game.scene.start('Market');
     } else if(game.scene.isActive('MyFish')){
         game.scene.stop('MyFish');
         game.scene.start('Market');
-    } else {
+    } else if (game.scene.isActive('TackleBox')){
         game.scene.stop('TackleBox');
-        game.scene.start('MainGame');
-    }
+        game.scene.start('Market');
+    }  
 });
 
 // Run the code whenever the "Run Code" button is pressed
