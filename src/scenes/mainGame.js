@@ -68,7 +68,6 @@ export default class MainGame extends Phaser.Scene{
             // Create fish
             const f = this.physics.add.image(startX, startY, 'fish').setDisplaySize(100, 50);
             f.body.allowGravity = false;
-            f.setVelocity(velocityX, 0);
             f.setBounce(1, 1);
             f.setCollideWorldBounds(true);
             f.depthRange = species.depth;
@@ -77,6 +76,7 @@ export default class MainGame extends Phaser.Scene{
             f.setFlipX(velocityX > 0);
 
             this.fishGroup.add(f);
+            f.setVelocity(velocityX, 0);
         }
 
     // Variables
