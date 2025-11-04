@@ -97,51 +97,57 @@ export default class MainGame extends Phaser.Scene{
 
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
-            if (this.canCast) {
-                if (length === undefined) {
-                    length = 100;
-                } else if (length > 500) {
-                    length = 500;
-                }
+    if (this.canCast) {
+        if (length === undefined) length = 100;
+        else if (length > 500) length = 500;
 
-                // Create hook sprite
-                if (this.rightFacing) {
-                    this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
-                } else {
-                    this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
-                }
+        // Create hook sprite
+        if (this.rightFacing) {
+            this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
+        } else {
+            this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
+        }
 
-                this.moveFreely = false;
-                this.canCast = false;
+        this.moveFreely = false;
+        this.canCast = false;
 
-                // Hook animation downward
-                this.tweens.add({
-                    targets: this.hook,
-                    y: length + 100,
-                    duration: 1000,
-                    ease: 'Power2',
-                    onComplete: () => {
-                        // Detect collisions with any fish
-                        this.physics.add.overlap(this.hook, this.fishGroup, handleOverlap, null, this);
-
-                        // If no collision after 3 seconds, reset
-                        this.time.delayedCall(3000, resumeGame, null, this);
-                    }
-                });
-            }
+        // Tween hook downward
+        this.tweens.add({
+            targets: this.hook,
+            y: length + 100,
+            duration: 1000,
+            ease: 'Power2',
+            onComplete: () => {
+                // Store collider reference
+                this.hookCollider = this.physics.add.overlap(
+                    this.hook,
+                    this.fishGroup,
+                    handleOverlap,
+                    null,
+                    this
+                );
+                // Reset if no collision after delay
+                this.time.delayedCall(3000, resumeGame, null, this);
+            },
         });
+    }
+});
 
 
 // Additional Functions ----------------------------------------------------------------
+    
     function handleOverlap(hook, fish) {
-        // Prevent multiple overlaps
-        this.physics.world.removeCollider(this.hookCollider);
+        // Disable collider immediately
+        if (this.hookCollider) {
+            this.physics.world.removeCollider(this.hookCollider);
+            this.hookCollider = null;
+        }
 
-        // Stop fish and attach to hook
+        // Stop both and attach fish to hook
         fish.body.setVelocity(0);
         fish.setY(hook.y + 10);
 
-        // Display a popup with fish type
+        // Show popup
         showCatchPopup.call(this, fish);
 
         // Make them rise together
@@ -151,12 +157,11 @@ export default class MainGame extends Phaser.Scene{
             duration: 1500,
             ease: 'Power1',
             onComplete: () => {
-                // Example: destroy them after rising
                 fish.destroy();
                 hook.destroy();
                 this.moveFreely = true;
                 this.canCast = true;
-            }
+            },
         });
     }
 
@@ -164,11 +169,11 @@ export default class MainGame extends Phaser.Scene{
         const fishName = fish.fishName || 'a Fish?';
 
         // Create popup text near top center
-        const popup = this.add.text(400, 100, `🎣 Caught ${fishName}!`, {
+        const popup = this.add.text(this.player.x, 100, `Caught ${fishName}!`, {
             fontSize: '20px',
             fontFamily: 'Arial',
             color: '#ffffffff',
-            backgroundColor: '#467862ff',
+            backgroundColor: '#72bc9cff',
             padding: { x: 10, y: 5 },
         }).setOrigin(0.5);
 
@@ -178,20 +183,27 @@ export default class MainGame extends Phaser.Scene{
             y: 60,
             alpha: 0,
             duration: 1500,
-            ease: 'Power1',
+            ease: 'Power2',
             onComplete: () => popup.destroy(),
         });
 }
 
 function resumeGame() {
-    if (this.hook) this.hook.destroy();
+    // Clean up collider if still active
+    if (this.hookCollider) {
+        this.physics.world.removeCollider(this.hookCollider);
+        this.hookCollider = null;
+    }
+    if (this.hook) {
+        this.hook.destroy();
+        this.hook = null;
+    }
+    // Reset variables
     this.moveFreely = true;
     this.canCast = true;
 }
 //--------------------------------------------------------------------------------------
-
     }
-
 
     update(){
 
