@@ -64,9 +64,9 @@ export default class MainGame extends Phaser.Scene{
             let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
             if (velocityX === 0) velocityX = 100; // ensure nonzero
 
-
             // Create fish
-            const f = this.physics.add.image(startX, startY, 'fish').setDisplaySize(100, 50);
+            const f = this.physics.add.sprite(startX, startY, 'fish').setDisplaySize(100, 50);
+            f.fishName = species.type;
             f.body.allowGravity = false;
             f.setBounce(1, 1);
             f.setCollideWorldBounds(true);
@@ -91,61 +91,104 @@ export default class MainGame extends Phaser.Scene{
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
 
-    // Define functions used in the written coding area---------------------
+    // Define functions used in the C4C written coding area---------------------
 
         // addBait(bait type)
 
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
-            if(this.canCast){
+            if (this.canCast) {
                 if (length === undefined) {
                     length = 100;
-                } else if (length > 500){
+                } else if (length > 500) {
                     length = 500;
                 }
-                // Create hook
-                if (this.rightFacing){
-                    this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30,30);
+
+                // Create hook sprite
+                if (this.rightFacing) {
+                    this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
                 } else {
-                    this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30,30);
+                    this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
                 }
-                // Stop/freeze player movements and removes ability to spam cast
-                    this.moveFreely = false;
-                    this.canCast = false;
 
-                // Move hook down according to length arg
-                    this.tweens.add({
-                        targets: this.hook, // The sprite you want to move
-                        y: length + 100,           // The target Y coordinate
-                        duration: 1000,       // Duration of the tween in milliseconds
-                        ease: 'Power2',       // Easing function for smoother animation (optional)
-                        onComplete: () => {
-                            // Code to execute when the sprite reaches the target position
-                            //Detect Collisions:
-                                //ADD CODE
-                            // Waiting Period, then resume game
-                                this.timedEvent = this.time.delayedCall(3000, resumeGame, null, this);
-                        }
-                    });
+                this.moveFreely = false;
+                this.canCast = false;
 
-                // Stop after 1 game loop
-                setTimeout(() => {
-                    try {
-                    // ?
+                // Hook animation downward
+                this.tweens.add({
+                    targets: this.hook,
+                    y: length + 100,
+                    duration: 1000,
+                    ease: 'Power2',
+                    onComplete: () => {
+                        // Detect collisions with any fish
+                        this.physics.add.overlap(this.hook, this.fishGroup, handleOverlap, null, this);
 
-                    } catch (e){};
-                }, gameLoopSpeed);
+                        // If no collision after 3 seconds, reset
+                        this.time.delayedCall(3000, resumeGame, null, this);
+                    }
+                });
             }
-        })
- 
-    // ----------------------------------------------------------------
-    // Other Functions:
-        
-        function resumeGame() {
-            this.hook.destroy();
-            this.moveFreely = true;
-            this.canCast = true;
-        }
+        });
+
+
+// Additional Functions ----------------------------------------------------------------
+    function handleOverlap(hook, fish) {
+        // Prevent multiple overlaps
+        this.physics.world.removeCollider(this.hookCollider);
+
+        // Stop fish and attach to hook
+        fish.body.setVelocity(0);
+        fish.setY(hook.y + 10);
+
+        // Display a popup with fish type
+        showCatchPopup.call(this, fish);
+
+        // Make them rise together
+        this.tweens.add({
+            targets: [hook, fish],
+            y: 110,
+            duration: 1500,
+            ease: 'Power1',
+            onComplete: () => {
+                // Example: destroy them after rising
+                fish.destroy();
+                hook.destroy();
+                this.moveFreely = true;
+                this.canCast = true;
+            }
+        });
+    }
+
+    function showCatchPopup(fish) {
+        const fishName = fish.fishName || 'a Fish?';
+
+        // Create popup text near top center
+        const popup = this.add.text(400, 100, `🎣 Caught ${fishName}!`, {
+            fontSize: '20px',
+            fontFamily: 'Arial',
+            color: '#ffffffff',
+            backgroundColor: '#467862ff',
+            padding: { x: 10, y: 5 },
+        }).setOrigin(0.5);
+
+        // Animate popup fading and moving up
+        this.tweens.add({
+            targets: popup,
+            y: 60,
+            alpha: 0,
+            duration: 1500,
+            ease: 'Power1',
+            onComplete: () => popup.destroy(),
+        });
+}
+
+function resumeGame() {
+    if (this.hook) this.hook.destroy();
+    this.moveFreely = true;
+    this.canCast = true;
+}
+//--------------------------------------------------------------------------------------
 
     }
 
