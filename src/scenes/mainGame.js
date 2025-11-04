@@ -169,11 +169,11 @@ export default class MainGame extends Phaser.Scene{
         const fishName = fish.fishName || 'a Fish?';
 
         // Create popup text near top center
-        const popup = this.add.text(this.player.x, 100, `Caught ${fishName}!`, {
+        const popup = this.add.text(this.player.x, 100, `Caught a ${fishName}!`, {
             fontSize: '20px',
             fontFamily: 'Arial',
             color: '#ffffffff',
-            backgroundColor: '#72bc9cff',
+            backgroundColor: '#16517bff',
             padding: { x: 10, y: 5 },
         }).setOrigin(0.5);
 
@@ -182,26 +182,27 @@ export default class MainGame extends Phaser.Scene{
             targets: popup,
             y: 60,
             alpha: 0,
-            duration: 1500,
-            ease: 'Power2',
+            duration: 8000,
+            ease: 'Power3',
             onComplete: () => popup.destroy(),
         });
 }
 
-function resumeGame() {
-    // Clean up collider if still active
-    if (this.hookCollider) {
-        this.physics.world.removeCollider(this.hookCollider);
-        this.hookCollider = null;
+    function resumeGame() {
+        // Clean up collider if still active
+        if (this.hookCollider) {
+            this.physics.world.removeCollider(this.hookCollider);
+            this.hookCollider = null;
+        }
+        // Destroy hook
+        if (this.hook) {
+            this.hook.destroy();
+            this.hook = null;
+        }
+        // Reset variables
+        this.moveFreely = true;
+        this.canCast = true;
     }
-    if (this.hook) {
-        this.hook.destroy();
-        this.hook = null;
-    }
-    // Reset variables
-    this.moveFreely = true;
-    this.canCast = true;
-}
 //--------------------------------------------------------------------------------------
     }
 
