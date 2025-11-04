@@ -82,6 +82,7 @@ export default class MainGame extends Phaser.Scene{
     // Variables
         this.moveFreely = true;
         this.rightFacing = true;
+        this.canCast = true;
 
     // C4C default text
         C4C.Editor.setText(`// Enter your code here!\n`);
@@ -96,7 +97,7 @@ export default class MainGame extends Phaser.Scene{
 
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
-            if(this.moveFreely){
+            if(this.canCast){
                 if (length === undefined) {
                     length = 100;
                 } else if (length > 500){
@@ -108,8 +109,9 @@ export default class MainGame extends Phaser.Scene{
                 } else {
                     this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30,30);
                 }
-                // Stop/freeze player movements
+                // Stop/freeze player movements and removes ability to spam cast
                     this.moveFreely = false;
+                    this.canCast = false;
 
                 // Move hook down according to length arg
                     this.tweens.add({
@@ -142,6 +144,7 @@ export default class MainGame extends Phaser.Scene{
         function resumeGame() {
             this.hook.destroy();
             this.moveFreely = true;
+            this.canCast = true;
         }
 
     }
@@ -158,12 +161,15 @@ export default class MainGame extends Phaser.Scene{
                 this.player.setVelocityX(-speed);
                 this.player.setFlipX(true);
                 this.rightFacing = false;
+                this.canCast = false;
             } else if (this.cursor.right.isDown) {
                 this.player.setVelocityX(speed);
                 this.player.setFlipX(false);
                 this.rightFacing = true;
+                this.canCast = false;
             } else {
                 this.player.setVelocityX(0);
+                this.canCast = true;
             } 
     }
        
