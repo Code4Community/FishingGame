@@ -2,9 +2,11 @@ import C4C from 'c4c-lib';
 import { gameLoopSpeed } from '..';
 import background from '../assets/bkg.png';
 import Phaser from 'phaser';
-import hook from '../assets/hook-testAsset.png';
+import hook from '../assets/Hook.png';
 import player from '../assets/raccoonAndBoat.png';
 import fish from '../assets/testFish.png';
+// Fish images:
+import Minnow from '../assets/Minnow.png';
 
 export default class MainGame extends Phaser.Scene{
     constructor(){
@@ -20,6 +22,7 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('hook', hook);
         this.load.image('player', player);
         this.load.image('fish', fish);
+        this.load.image('Minnow', Minnow);
 
     }
 
@@ -39,19 +42,19 @@ export default class MainGame extends Phaser.Scene{
 
             // Fish Species
             const fishSpecies = [
-                {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0]},
-                {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0]},
-                {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0]},
-                {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1]},
-                {type: 'Sunfish', speedRange: [-120, 120], depth: depthZone[1]},
-                {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1]},
-                {type: 'Catfish', speedRange: [-140, 140], depth: depthZone[2]},
-                {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2]},
-                {type: 'Red Snapper', speedRange: [-140, 140], depth: depthZone[2]},
-                {type: 'Blobfish', speedRange: [-160, 160], depth: depthZone[3]},
-                {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3]},
-                {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3]},
-                {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4]},
+                {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Minnow', displayX: 90, displayY: 20},
+                {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Sunfish', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Catfish', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Red Snapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Blobfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4], imgName: 'fish', displayX: 100, displayY: 50},
             ]
 
         this.fishGroup = this.physics.add.group();
@@ -65,7 +68,7 @@ export default class MainGame extends Phaser.Scene{
             if (velocityX === 0) velocityX = 100; // ensure nonzero
 
             // Create fish
-            const f = this.physics.add.sprite(startX, startY, 'fish').setDisplaySize(100, 50);
+            const f = this.physics.add.sprite(startX, startY, species.imgName).setDisplaySize(species.displayX, species.displayY);
             f.fishName = species.type;
             f.body.allowGravity = false;
             f.setBounce(1, 1);
@@ -103,9 +106,9 @@ export default class MainGame extends Phaser.Scene{
 
         // Create hook sprite
         if (this.rightFacing) {
-            this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
+            this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(15, 30);
         } else {
-            this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
+            this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(15, 30);
         }
 
         this.moveFreely = false;
