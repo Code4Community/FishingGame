@@ -20,6 +20,7 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('hook', hook);
         this.load.image('player', player);
         this.load.image('fish', fish);
+        this.load.image('line', line);
 
     }
 
@@ -94,6 +95,15 @@ export default class MainGame extends Phaser.Scene{
 
         // addBait(bait type)
 
+        // fishing line particle emitter
+        const fishingline = this.add.particles('line');
+        const hookemitter = fishingline.createEmitter({
+            speed: 50,
+            scale: { start: 0.5, end: 0},
+            blendMode: 'ADD',
+            lifespan: 500,
+        });
+
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
             if (length === undefined) {
@@ -108,6 +118,9 @@ export default class MainGame extends Phaser.Scene{
             // Stop/freeze player movements
                 this.moveFreely = false;
 
+            // make the fishing line emitter follow the hook
+            hookemitter.startFollow(this.hook);
+            
             // Move hook down according to length arg
                 this.tweens.add({
                     targets: this.hook, // The sprite you want to move
