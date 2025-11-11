@@ -23,6 +23,7 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('player', player);
         this.load.image('fish', fish);
         this.load.image('Minnow', Minnow);
+        this.load.image('line', line);
 
     }
 
@@ -97,6 +98,15 @@ export default class MainGame extends Phaser.Scene{
     // Define functions used in the C4C written coding area---------------------
 
         // addBait(bait type)
+
+        // fishing line particle emitter
+        const fishingline = this.add.particles('line');
+        const hookemitter = fishingline.createEmitter({
+            speed: 50,
+            scale: { start: 0.5, end: 0},
+            blendMode: 'ADD',
+            lifespan: 500,
+        });
 
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
