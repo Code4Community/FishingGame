@@ -65,9 +65,9 @@ export default class MainGame extends Phaser.Scene{
             let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
             if (velocityX === 0) velocityX = 100; // ensure nonzero
 
-
             // Create fish
-            const f = this.physics.add.image(startX, startY, 'fish').setDisplaySize(100, 50);
+            const f = this.physics.add.sprite(startX, startY, 'fish').setDisplaySize(100, 50);
+            f.fishName = species.type;
             f.body.allowGravity = false;
             f.setBounce(1, 1);
             f.setCollideWorldBounds(true);
@@ -83,6 +83,7 @@ export default class MainGame extends Phaser.Scene{
     // Variables
         this.moveFreely = true;
         this.rightFacing = true;
+        this.canCast = true;
 
     // C4C default text
         C4C.Editor.setText(`// Enter your code here!\n`);
@@ -91,7 +92,7 @@ export default class MainGame extends Phaser.Scene{
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
 
-    // Define functions used in the written coding area---------------------
+    // Define functions used in the C4C written coding area---------------------
 
         // addBait(bait type)
 
@@ -106,60 +107,143 @@ export default class MainGame extends Phaser.Scene{
 
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
-            if (length === undefined) {
-                length = 100;
-            }
-            // Create hook
-            if (this.rightFacing){
-                this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30,30);
-            } else {
-                this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30,30);
-            }
-            // Stop/freeze player movements
-                this.moveFreely = false;
+    if (this.canCast) {
+        if (length === undefined) length = 100;
+        else if (length > 500) length = 500;
 
-            // make the fishing line emitter follow the hook
-            hookemitter.startFollow(this.hook);
-            
-            // Move hook down according to length arg
-                this.tweens.add({
-                    targets: this.hook, // The sprite you want to move
-                    y: length + 100,           // The target Y coordinate
-                    duration: 1000,       // Duration of the tween in milliseconds
-                    ease: 'Power2',       // Easing function for smoother animation (optional)
-                    onComplete: () => {
-                        // Code to execute when the sprite reaches the target position
-                        //Detect Collisions:
-                            //ADD CODE
-                        // Waiting Period, then resume game
-                            this.timedEvent = this.time.delayedCall(3000, resumeGame, null, this);
-                    }
-                });
-
-            // Stop after 1 game loop
-            setTimeout(() => {
-                try {
-                  // ?
-
-                } catch (e){};
-            }, gameLoopSpeed);
-        })
- 
-    // ----------------------------------------------------------------
-    // Other Functions:
-        
-        function resumeGame() {
-            this.hook.destroy();
-            this.moveFreely = true;
+        // Create hook sprite
+        if (this.rightFacing) {
+            this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
+        } else {
+            this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(30, 30);
         }
 
+        this.moveFreely = false;
+        this.canCast = false;
+
+        // Tween hook downward
+        this.tweens.add({
+            targets: this.hook,
+            y: length + 100,
+            duration: 1000,
+            ease: 'Power2',
+            onComplete: () => {
+                // Store collider reference
+                this.hookCollider = this.physics.add.overlap(
+                    this.hook,
+                    this.fishGroup,
+                    handleOverlap,
+                    null,
+                    this
+                );
+                // Reset if no collision after delay
+                this.time.delayedCall(3000, resumeGame, null, this);
+            },
+        });
+    }
+});
+
+
+// Additional Functions ----------------------------------------------------------------
+    
+    function handleOverlap(hook, fish) {
+        // Disable collider immediately
+        if (this.hookCollider) {
+            this.physics.world.removeCollider(this.hookCollider);
+            this.hookCollider = null;
+        }
+
+        // Stop both and attach fish to hook
+        fish.body.setVelocity(0);
+        fish.setY(hook.y + 10);
+
+        // Show popup
+        showCatchPopup.call(this, fish);
+
+        // Make them rise together
+        this.tweens.add({
+            targets: [hook, fish],
+            y: 110,
+            duration: 1500,
+            ease: 'Power1',
+            onComplete: () => {
+                fish.destroy();
+                hook.destroy();
+                this.moveFreely = true;
+                this.canCast = true;
+            },
+        });
     }
 
+    function showCatchPopup(fish) {
+        const fishName = fish.fishName || 'a Fish?';
+
+        // Create popup text near top center
+        const popup = this.add.text(this.player.x, 100, `Caught a ${fishName}!`, {
+            fontSize: '20px',
+            fontFamily: 'Arial',
+            color: '#ffffffff',
+            backgroundColor: '#16517bff',
+            padding: { x: 10, y: 5 },
+        }).setOrigin(0.5);
+
+        // Animate popup fading and moving up
+        this.tweens.add({
+            targets: popup,
+            y: 60,
+            alpha: 0,
+            duration: 8000,
+            ease: 'Power3',
+            onComplete: () => popup.destroy(),
+        });
+}
+
+    function resumeGame() {
+        // Clean up collider if still active
+        if (this.hookCollider) {
+            this.physics.world.removeCollider(this.hookCollider);
+            this.hookCollider = null;
+        }
+        // Destroy hook
+        if (this.hook) {
+            this.hook.destroy();
+            this.hook = null;
+        }
+        // Reset variables
+        this.moveFreely = true;
+        this.canCast = true;
+    }
+//--------------------------------------------------------------------------------------
+    }
 
     update(){
 
     // Conditional logic for keyboard controls
     const speed = this.cursor.shift.isDown ? 300 : 160;
+    const depthZone = [
+        {min: 200, max: 300}, // Shallow
+        {min: 300, max: 400}, // Mid
+        {min: 400, max: 500},  // Deep
+        {min: 500, max: 600},  // Very Deep
+        {min: 545, max: 580}  // Abyss
+    ]
+
+    // Fish Species
+    const fishSpecies = [
+        {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0]},
+        {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0]},
+        {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0]},
+        {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1]},
+        {type: 'Sunfish', speedRange: [-120, 120], depth: depthZone[1]},
+        {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1]},
+        {type: 'Catfish', speedRange: [-140, 140], depth: depthZone[2]},
+        {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2]},
+        {type: 'Red Snapper', speedRange: [-140, 140], depth: depthZone[2]},
+        {type: 'Blobfish', speedRange: [-160, 160], depth: depthZone[3]},
+        {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3]},
+        {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3]},
+        {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4]},
+    ]
 
     if(this.moveFreely) {
         // Boat & Raccoon movement
@@ -167,12 +251,15 @@ export default class MainGame extends Phaser.Scene{
                 this.player.setVelocityX(-speed);
                 this.player.setFlipX(true);
                 this.rightFacing = false;
+                this.canCast = false;
             } else if (this.cursor.right.isDown) {
                 this.player.setVelocityX(speed);
                 this.player.setFlipX(false);
                 this.rightFacing = true;
+                this.canCast = false;
             } else {
                 this.player.setVelocityX(0);
+                this.canCast = true;
             } 
     }
        
@@ -184,11 +271,29 @@ export default class MainGame extends Phaser.Scene{
                 fish.setFlipX(false);
             }
 
-            // Bounce fish within depth range
-            if (fish.body.blocked.left || fish.body.blocked.right) {
-                const newY = Phaser.Math.Between(fish.depthRange.min, fish.depthRange.max);
-                fish.setY(newY);
-                fish.setVelocityX(-fish.body.velocity.x);
+            // Delete fish if out of screen bounds and spawn new
+            if (fish.x < -150 || fish.x > this.scale.width + 150) {
+                fish.destroy();
+                // Random starting position
+                const species = Phaser.Utils.Array.GetRandom(fishSpecies);
+                const startX = Phaser.Math.Between(100, 700);
+                const startY = Phaser.Math.Between(species.depth.min + 10, species.depth.max - 10);
+                let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
+                if (velocityX === 0) velocityX = 100; // ensure nonzero
+
+                // Create fish
+                const f = this.physics.add.sprite(startX, startY, 'fish').setDisplaySize(100, 50);
+                f.fishName = species.type;
+                f.body.allowGravity = false;
+                f.setBounce(1, 1);
+                f.setCollideWorldBounds(true);
+                f.depthRange = species.depth;
+
+                // Flip sprite based on direction
+                f.setFlipX(velocityX > 0);
+
+                this.fishGroup.add(f);
+                f.setVelocity(velocityX, 0);
             }
         })
     }
