@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import hook from '../assets/hook-testAsset.png';
 import player from '../assets/raccoonAndBoat.png';
 import fish from '../assets/testFish.png';
+import line from '../assets/line.png'
 
 export default class MainGame extends Phaser.Scene{
     constructor(){
@@ -96,14 +97,6 @@ export default class MainGame extends Phaser.Scene{
 
         // addBait(bait type)
 
-        // fishing line particle emitter
-        const fishingline = this.add.particles('line');
-        const hookemitter = fishingline.createEmitter({
-            speed: 50,
-            scale: { start: 0.5, end: 0},
-            blendMode: 'ADD',
-            lifespan: 500,
-        });
 
         // cast(length)
         C4C.Interpreter.define('cast', (length) => {
@@ -120,6 +113,18 @@ export default class MainGame extends Phaser.Scene{
 
         this.moveFreely = false;
         this.canCast = false;
+
+        // fishing line particle emitter
+        const hookemitter = this.add.particles('line', {
+            frame: 'black',
+            speed: 50,
+            scale: { start: 0.5, end: 0},
+            blendMode: 'ADD',
+            lifespan: 1000,
+        });
+
+        //add hookemitter to hook
+        hookemitter.startFollow(this.hook, 0, 0)
 
         // Tween hook downward
         this.tweens.add({
