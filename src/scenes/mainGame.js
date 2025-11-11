@@ -5,8 +5,10 @@ import Phaser from 'phaser';
 import hook from '../assets/Hook.png';
 import player from '../assets/raccoonAndBoat.png';
 import fish from '../assets/testFish.png';
+import line from '../assets/line.png'
 // Fish images:
 import Minnow from '../assets/Minnow.png';
+
 
 export default class MainGame extends Phaser.Scene{
     constructor(){
