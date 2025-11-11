@@ -210,6 +210,30 @@ export default class MainGame extends Phaser.Scene{
 
     // Conditional logic for keyboard controls
     const speed = this.cursor.shift.isDown ? 300 : 160;
+    const depthZone = [
+        {min: 200, max: 300}, // Shallow
+        {min: 300, max: 400}, // Mid
+        {min: 400, max: 500},  // Deep
+        {min: 500, max: 600},  // Very Deep
+        {min: 545, max: 580}  // Abyss
+    ]
+
+    // Fish Species
+    const fishSpecies = [
+        {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0]},
+        {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0]},
+        {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0]},
+        {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1]},
+        {type: 'Sunfish', speedRange: [-120, 120], depth: depthZone[1]},
+        {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1]},
+        {type: 'Catfish', speedRange: [-140, 140], depth: depthZone[2]},
+        {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2]},
+        {type: 'Red Snapper', speedRange: [-140, 140], depth: depthZone[2]},
+        {type: 'Blobfish', speedRange: [-160, 160], depth: depthZone[3]},
+        {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3]},
+        {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3]},
+        {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4]},
+    ]
 
     if(this.moveFreely) {
         // Boat & Raccoon movement
@@ -237,11 +261,29 @@ export default class MainGame extends Phaser.Scene{
                 fish.setFlipX(false);
             }
 
-            // Bounce fish within depth range
-            if (fish.body.blocked.left || fish.body.blocked.right) {
-                const newY = Phaser.Math.Between(fish.depthRange.min, fish.depthRange.max);
-                fish.setY(newY);
-                fish.setVelocityX(-fish.body.velocity.x);
+            // Delete fish if out of screen bounds and spawn new
+            if (fish.x < -150 || fish.x > this.scale.width + 150) {
+                fish.destroy();
+                // Random starting position
+                const species = Phaser.Utils.Array.GetRandom(fishSpecies);
+                const startX = Phaser.Math.Between(100, 700);
+                const startY = Phaser.Math.Between(species.depth.min + 10, species.depth.max - 10);
+                let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
+                if (velocityX === 0) velocityX = 100; // ensure nonzero
+
+                // Create fish
+                const f = this.physics.add.sprite(startX, startY, 'fish').setDisplaySize(100, 50);
+                f.fishName = species.type;
+                f.body.allowGravity = false;
+                f.setBounce(1, 1);
+                f.setCollideWorldBounds(true);
+                f.depthRange = species.depth;
+
+                // Flip sprite based on direction
+                f.setFlipX(velocityX > 0);
+
+                this.fishGroup.add(f);
+                f.setVelocity(velocityX, 0);
             }
         })
     }
