@@ -8,6 +8,8 @@ import fish from '../assets/testFish.png';
 import line from '../assets/line.png'
 // Fish images:
 import Minnow from '../assets/Minnow.png';
+// Bait images:
+
 
 
 export default class MainGame extends Phaser.Scene{
@@ -16,6 +18,7 @@ export default class MainGame extends Phaser.Scene{
 
         this.speed = 100;
         this.length = 100;
+        this.baitType = '';
         
     }
 
@@ -99,11 +102,36 @@ export default class MainGame extends Phaser.Scene{
 
     // Define functions used in the C4C written coding area---------------------
 
-        // addBait(bait type)
+    // addBait(baitType)
+    C4C.Interpreter.define('addBait', (baitType) => {
+    if (this.canCast) {
+        valid = false;
 
+        if (baitType === undefined) {
+            baitType = '';
+        } 
+        else if (baitType != ''){
+            // TODO
+            // Check if baitType entered is valid & unlocked (using global variables)--> change boolean 'valid' accordingly
+            // Retrieve the corresponding image path string
+            baitImgVar = baitType.toLowercase();
+        }
 
-        // cast(length)
-        C4C.Interpreter.define('cast', (length) => {
+        // Create bait sprite iff baitType is valid & unlocked
+        if (baitType != '' && valid) {
+            if (this.rightFacing) {
+                this.bait = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, baitImgVar).setDisplaySize(15, 30);
+            } else {
+                this.bait = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, baitImgVar).setDisplaySize(15, 30);
+            }
+        }
+        // TODO
+        // Find a way to make the bait follow/tween with the hook (add this.bait in cast method?)
+    }
+});
+
+    // cast(length)
+    C4C.Interpreter.define('cast', (length) => {
     if (this.canCast) {
         if (length === undefined) length = 100;
         else if (length > 500) length = 500;
