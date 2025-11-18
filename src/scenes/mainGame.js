@@ -178,8 +178,6 @@ export default class MainGame extends Phaser.Scene{
             onComplete: () => {
                 fish.destroy();
                 hook.destroy();
-                this.moveFreely = true;
-                this.canCast = true;
             },
         });
     }
