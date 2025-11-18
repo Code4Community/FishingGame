@@ -8,6 +8,7 @@ import fish from '../assets/testFish.png';
 import line from '../assets/line.png'
 // Fish images:
 import Minnow from '../assets/Minnow.png';
+import Carp from '../assets/Carp.png';
 // Bait images:
 
 
@@ -27,9 +28,10 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('hook', hook);
         this.load.image('player', player);
         this.load.image('fish', fish);
-        this.load.image('Minnow', Minnow);
         this.load.image('line', line);
-
+        // Fish images
+        this.load.image('Minnow', Minnow);
+        this.load.image('Carp', Carp);
     }
 
     create(){
@@ -49,7 +51,7 @@ export default class MainGame extends Phaser.Scene{
             // Fish Species
             const fishSpecies = [
                 {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Minnow', displayX: 90, displayY: 20},
-                {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Carp', displayX: 100, displayY: 50},
                 {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0], imgName: 'fish', displayX: 100, displayY: 50},
                 {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
                 {type: 'Sunfish', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
@@ -266,7 +268,7 @@ export default class MainGame extends Phaser.Scene{
     // Fish Species
     const fishSpecies = [
         {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Minnow', displayX: 90, displayY: 20},
-        {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0], imgName: 'fish', displayX: 100, displayY: 50},
+        {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Carp', displayX: 100, displayY: 50},
         {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0], imgName: 'fish', displayX: 100, displayY: 50},
         {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
         {type: 'Sunfish', speedRange: [-120, 120], depth: depthZone[1], imgName: 'fish', displayX: 100, displayY: 50},
