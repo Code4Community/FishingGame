@@ -21,34 +21,36 @@ export default class Market extends Phaser.Scene{
         };
 
         const items = [
-                {item: 'item1', name: 'Worms', price: 5, type: 'Bait', itemID: 1},
+                {item: 'item1', name: 'Worms', price: 5, type: 'Bait', itemID: 1, description: "Use as a parameter in the addBait() method."},
         ]
 
         // Default text:
-        C4C.Editor.setText(`// $__\n// To see item info, enter item number and run:\n details()\n`);
+        C4C.Editor.setText(`// To see item info, enter item number and run:\n details()\n`);
 
 
         // Define functions used in the C4C written coding area---------------------
         C4C.Interpreter.define('details', (ID) => {
             ID = Number(ID);
-
             const i = items.find(item => item.itemID === ID);
 
+            // Handles invalid input:
             if (!i) {
-                C4C.Editor.setText(`// Please enter a valid number!`);
+                C4C.Editor.setText(`// To see item info, enter item number and run:\n details()\n// Please enter a valid number!\n`);
                 return;
             }
-
             // Item Details in text editor:
             C4C.Editor.setText(
                 `// Item ID: ${i.itemID}\n` +
                 `// Name: ${i.name}\n` +
                 `// Type: ${i.type}\n` +
-                `// Price: $${i.price}`
+                `// Price: $${i.price}\n\n` +
+                `// Description: ${i.description}\n\n`+
+                `details()`
             );
 
              highlightItem(ID);
         });
+
         // Additional Functions ----------------------------------------------------------------
         
         // Grays out all other items
@@ -63,7 +65,6 @@ export default class Market extends Phaser.Scene{
             }
         });
     };
-   
     }
 
     update(){
