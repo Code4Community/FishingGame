@@ -14,6 +14,8 @@ import Trout from '../assets/Trout.png';
 import Catfish from '../assets/Catfish.png';
 import Bass from '../assets/Bass.png';
 import Tuna from '../assets/Tuna.png';
+import Salmon from '../assets/Salmon.png';
+import RedSnapper from '../assets/RedSnapper.png';
 // Bait images:
 
 
@@ -42,6 +44,8 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('Catfish', Catfish);
         this.load.image('Bass', Bass);
         this.load.image('Tuna', Tuna);
+        this.load.image('Salmon', Salmon);
+        this.load.image('RedSnapper', RedSnapper);
     }
 
     create(){
@@ -66,9 +70,9 @@ export default class MainGame extends Phaser.Scene{
                 {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Bass', displayX: 110, displayY: 40},
                 {type: 'Catfish', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Catfish', displayX: 110, displayY: 50},
                 {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Trout', displayX: 100, displayY: 30},
-                {type: 'Salmon', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'Salmon', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Salmon', displayX: 105, displayY: 40},
                 {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Tuna', displayX: 110, displayY: 45},
-                {type: 'Red Snapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+                {type: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'RedSnapper', displayX: 90, displayY: 40},
                 {type: 'Blobfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
                 {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
                 {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
@@ -283,9 +287,9 @@ export default class MainGame extends Phaser.Scene{
         {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Bass', displayX: 110, displayY: 40},
         {type: 'Catfish', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Catfish', displayX: 110, displayY: 50},
         {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Trout', displayX: 100, displayY: 30},
-        {type: 'Salmon', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+        {type: 'Salmon', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Salmon', displayX: 105, displayY: 40},
         {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Tuna', displayX: 110, displayY: 45},
-        {type: 'Red Snapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'fish', displayX: 100, displayY: 50},
+        {type: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'RedSnapper', displayX: 90, displayY: 40},
         {type: 'Blobfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
         {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
         {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50},
