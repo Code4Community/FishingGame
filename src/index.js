@@ -1,6 +1,7 @@
 // This is the starting point of your application
 import C4C from 'c4c-lib';
 import Phaser from 'phaser';
+import Boot from './scenes/boot';
 import MainGame from './scenes/mainGame';
 import TackleBox from './scenes/tacklebox';
 import MyFish from './scenes/myfish';
@@ -43,12 +44,11 @@ const config = {
     // Where the game is located (id of the DOM element)
     parent: 'game-container',
     // All the scenes in the game
-    scene: [MainGame, TackleBox, MyFish, Market]
+    scene: [Boot, MainGame, TackleBox, MyFish, Market]
 }
 
 const game = new Phaser.Game(config);
 
-game.scene.start('MainGame');
 
 
 // This is only for stepEval code, you can delete this line otherwise
