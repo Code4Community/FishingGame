@@ -63,7 +63,7 @@ export default class Market extends Phaser.Scene{
         const items = [
                 {item: 'item1', name: 'Worms', price: 5, type: 'Bait', itemID: 1, description: "Use as a parameter in the addBait() method."},
                 {item: 'item2', name: 'Apple', price: 10, type: 'Bait', itemID: 2, description: "Use as a parameter in the addBait() method."},
-                {item: 'item3', name: 'Equip', price: 20, type: 'Method', itemID: 3, description: "An instance method: use on either\nRico or the boat\nto equip an item.\nExample:\nRico.equip(crown);\nboat.equip(flag);"},
+                {item: 'item3', name: 'Equip', price: 20, type: 'Method', itemID: 3, description: "An instance method.\n// Use on either Rico or the boat to equip an item.\n// Example:\n// Rico.equip(crown);\n// boat.equip(flag);"},
                 {item: 'item4', name: 'Flag', price: 10, type: 'Bait', itemID: 4, description: "Use as a parameter in the boat.equip() method."},
                 {item: 'item5', name: 'Pizza', price: 15, type: 'Bait', itemID: 5, description: "Use as a parameter in the addBait() method."},
 
@@ -90,7 +90,7 @@ export default class Market extends Phaser.Scene{
                 `// Item ID: ${i.itemID}\n` +
                 `// Name: ${i.name}\n` +
                 `// Type: ${i.type}\n` +
-                `// Price: $${i.price}\n\n` +
+                `// Price: ${i.price} coins\n\n` +
                 `// Description: ${i.description}\n\n`+
                 `// To see item info, enter item number and run: details()\n`
             );

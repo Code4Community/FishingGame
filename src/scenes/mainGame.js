@@ -231,7 +231,6 @@ export default class MainGame extends Phaser.Scene{
             let coins = this.registry.get('coins');
             coins += fish.price || 1;
             this.registry.set('coins', coins);
-            this.coinText.setText("Coins: " + coins);
 
 
         // Stop both and attach fish to hook
