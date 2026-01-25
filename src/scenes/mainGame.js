@@ -16,7 +16,10 @@ import Bass from '../assets/Bass.png';
 import Tuna from '../assets/Tuna.png';
 import Salmon from '../assets/Salmon.png';
 import RedSnapper from '../assets/RedSnapper.png';
+import Shark from '../assets/Shark.png';
 import Swordfish from '../assets/Swordfish.png';
+import Pufferfish from '../assets/Pufferfish.png';
+import Megalodon from '../assets/Megalodon.png';
 // Bait images:
 
 
@@ -26,7 +29,7 @@ const depthZone = [
     {min: 300, max: 400}, // Mid
     {min: 400, max: 500},  // Deep
     {min: 500, max: 600},  // Very Deep
-    {min: 545, max: 580}  // Abyss
+    {min: 570, max: 610}  // Abyss
     ]
 
 const fishSpecies = [
@@ -39,10 +42,10 @@ const fishSpecies = [
     {type: 'Salmon', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Salmon', displayX: 105, displayY: 40, price: 3},
     {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Tuna', displayX: 110, displayY: 45, price: 3},
     {type: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'RedSnapper', displayX: 90, displayY: 40, price: 3},
-    {type: 'Shark', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50, price: 4},
+    {type: 'Shark', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Shark', displayX: 135, displayY: 70, price: 4},
     {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Swordfish', displayX: 145, displayY: 60, price: 4},
-    {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'fish', displayX: 100, displayY: 50, price: 4},
-    {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4], imgName: 'fish', displayX: 100, displayY: 50, price: 100},
+    {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Pufferfish', displayX: 65, displayY: 50, price: 4},
+    {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4], imgName: 'Megalodon', displayX: 500, displayY: 300, price: 100},
     ]
 
 
@@ -73,7 +76,11 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('Tuna', Tuna);
         this.load.image('Salmon', Salmon);
         this.load.image('RedSnapper', RedSnapper);
+        this.load.image('Shark', Shark);
         this.load.image('Swordfish', Swordfish);
+        this.load.image('Pufferfish',Pufferfish);
+        this.load.image('Megalodon', Megalodon);
+
     }
 
     create(){
