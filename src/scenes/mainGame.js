@@ -141,10 +141,10 @@ export default class MainGame extends Phaser.Scene{
     // C4C default text
         C4C.Editor.setText(`// Enter your code here!\n`);
 
-
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
 
+        
     // Define functions used in the C4C written coding area---------------------
 
     // addBait(baitType)
