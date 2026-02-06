@@ -27,7 +27,7 @@ export default class Boot extends Phaser.Scene {
     this.registry.set('caughtMegalodon', false);
 
     // Items purchased status
-    this.registry.set('boughtWorm', false);
+    this.registry.set('boughtWorms', false);
     this.registry.set('boughtApple', false);
     this.registry.set('boughtEquip', false);
     this.registry.set('boughtFlag', false);

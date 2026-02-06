@@ -98,6 +98,33 @@ export default class Market extends Phaser.Scene{
              highlightItem(ID);
         });
 
+        C4C.Interpreter.define('buy', (ID) => {
+            ID = Number(ID);
+            const i = items.find(item => item.itemID === ID);
+            // Handles invalid input:
+            if (!i) {
+                C4C.Editor.setText(`// Invalid input, try again!`);
+                return;
+            }
+            // Variables:
+            let coins = this.registry.get('coins');
+            let boughtStatus = this.registry.get('bought'+i.name);
+            // Check if the item has been purchased already:
+            if(boughtStatus){
+                C4C.Editor.setText(`//You've already purchased this item!`);
+                return;
+            }
+            // Purchase if able:
+            if (coins >= i.price) {
+                this.registry.set('coins', coins -= i.price);
+                this.registry.set('bought'+i.name, true);
+                //DELETE IMAGE HERE
+            } else {
+                C4C.Editor.setText(`// You don't have enough coins!`);
+                return;
+            }
+        });
+
         // Additional Functions ----------------------------------------------------------------
         
         // Grays out all other items
