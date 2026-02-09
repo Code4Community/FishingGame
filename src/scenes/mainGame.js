@@ -321,11 +321,13 @@ export default class MainGame extends Phaser.Scene{
                 this.player.setFlipX(true);
                 this.rightFacing = false;
                 this.canCast = false;
+                this.bobObject(this.player, 10, 1000, 1)
             } else if (this.cursor.right.isDown) {
                 this.player.setVelocityX(speed);
                 this.player.setFlipX(false);
                 this.rightFacing = true;
                 this.canCast = false;
+                this.bobObject(this.player, 10, 1000, 1)
             } else {
                 this.player.setVelocityX(0);
                 this.canCast = true;
@@ -379,6 +381,26 @@ export default class MainGame extends Phaser.Scene{
 
     onCoinsChanged(parent, value) {
         this.coinText.setText('Coins: ' + value);
+    }
+
+    /**
+     * Makes the selected object go up and down for the selected duration and distance
+     *
+     * @param obj - The obj that will bob
+     * @param distance - The max distance to bob in one direction
+     * @param duration - The amount of time the object should bob for, measured in milliseconds
+     * @param cycles - The amount of times the boat should go up and down
+     */
+    bobObject(obj, distance, duration, cycles){
+        if(obj.bobTween && obj.bobTween.isPlaying()) return;
+
+        obj.bobTween = this.tweens.add({
+            targets: obj,
+            y: obj.y - distance,
+            duration: duration / 2,
+            yoyo: true,
+            repeat: cycles - 1
+        })
     }
 }
 
