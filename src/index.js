@@ -156,5 +156,9 @@ document.getElementById('run-code').addEventListener('click', () => {
     gameLoop = setInterval(() => codeRunner.step(), gameLoopSpeed);
 });
 
+document.getElementById('game-container').addEventListener('click', () => {
+    document.activeElement?.blur()
+})
+
 
 export {gameLoopSpeed};
