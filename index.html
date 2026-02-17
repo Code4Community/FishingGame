@@ -9,35 +9,31 @@
 </head>
 
 <body>
-
-  <main>
-
-  <nav id="navbar" class="navbar navbar-dark bg-dark">
-    <a id="brand" class="navbar-brand" >Rico's Fishing Adventure</a>
-    <ul class="nav me-auto">
-      <li class="nav-item">
-        <button id="MainGame" type="button" class="btn btn-primary" style = "margin-right:10px">🎣</button>
-        <button id="market" type="button" class="btn btn-primary" style = "margin-right:10px">Market</button>
-        <button id="tackle-box" type="button" class="btn btn-primary" style = "margin-right:10px">Tackle Box</button>
-        <button id="my-fish" type="button" class="btn btn-primary" style = "margin-right:10px">My Fish</button>
-      </li>  
-      <li class="nav-item">
-        <button id="run-code" type="button" class="btn btn-success">Run Code</button>
-      </li>
-    </ul>
-  </nav>
-  <br>
-  <div class="container">
-    <!-- <h1>Header Text</h1> -->
-    <p class = "gameText">
-      Type your code below:
-    </p>
-  </div>
-
-  <div id="main_view" class="d-flex">
-    <div id="code-editor"></div>  
-    <div id="game-container"></div>
-  </div>
-</main>
+  <main id="app-root">
+    <nav id="navbar" class="navbar navbar-dark bg-dark">
+      <a id="brand" class="navbar-brand">Rico's Fishing Adventure</a>
+      <ul class="nav me-auto">
+        <li class="nav-item">
+          <button id="MainGame" type="button" class="btn btn-primary" style="margin-right:10px">🎣</button>
+          <button id="market" type="button" class="btn btn-primary" style="margin-right:10px">Market</button>
+          <button id="tackle-box" type="button" class="btn btn-primary" style="margin-right:10px">Tackle Box</button>
+          <button id="my-fish" type="button" class="btn btn-primary" style="margin-right:10px">My Fish</button>
+        </li>
+        <li class="nav-item">
+          <button id="run-code" type="button" class="btn btn-success">Run Code</button>
+        </li>
+      </ul>
+    </nav>
+    <div id="main_view">
+      <div id="editor-game-row">
+        <div id="editor-section">
+          <p class="gameText">Type your code below:</p>
+          <div id="code-editor"></div>
+        </div>
+        <div id="game-container"></div>
+      </div>
+      <div id="code-output">Test output</div>
+    </div>
+  </main>
 </body>
 </html>

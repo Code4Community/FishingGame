@@ -19,8 +19,8 @@ const theme = {
     "&": {
         color: "#00007F",
         backgroundColor: "#fafafa",
-        height: gameHeight + "px",
-        width: "calc(100vw - "+gameWidth+"px)",        
+        height: "100%",
+        width: "100%",
     }
 }
 
@@ -43,13 +43,28 @@ const config = {
     },
     // Where the game is located (id of the DOM element)
     parent: 'game-container',
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
     // All the scenes in the game
     scene: [Boot, MainGame, TackleBox, MyFish, Market]
 }
 
 const game = new Phaser.Game(config);
 
-
+// Resize game canvas when the container size changes (e.g. window resize)
+function refreshGameScale() {
+    if (game.scale) {
+        game.scale.refresh();
+    }
+}
+window.addEventListener('resize', refreshGameScale);
+const gameContainerEl = document.getElementById('game-container');
+if (gameContainerEl && typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(refreshGameScale);
+    resizeObserver.observe(gameContainerEl);
+}
 
 // This is only for stepEval code, you can delete this line otherwise
 // StepEval does not currently allow functions to be defined in the code editor
