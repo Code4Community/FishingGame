@@ -64,11 +64,11 @@ export default class Market extends Phaser.Scene{
                 {item: 'item1', name: 'Worms', price: 5, type: 'Bait', itemID: 1, description: "Use as a parameter in the addBait() method."},
                 {item: 'item2', name: 'Apple', price: 10, type: 'Bait', itemID: 2, description: "Use as a parameter in the addBait() method."},
                 {item: 'item3', name: 'Equip', price: 20, type: 'Method', itemID: 3, description: "An instance method.\n// Use on either Rico or the boat to equip an item.\n// Example:\n// Rico.equip(crown);\n// boat.equip(flag);"},
-                {item: 'item4', name: 'Flag', price: 10, type: 'Bait', itemID: 4, description: "Use as a parameter in the boat.equip() method."},
+                {item: 'item4', name: 'Flag', price: 10, type: 'Item', itemID: 4, description: "Use as a parameter in the boat.equip() method."},
                 {item: 'item5', name: 'Pizza', price: 15, type: 'Bait', itemID: 5, description: "Use as a parameter in the addBait() method."},
-
+                {item: 'item6', name: 'baitFor', price: 20, type: 'Method', itemID: 6, description: "A static method.\n// Use to find what bait is needed for each species of fish. \n// Example:\n// baitFor(tuna);"},
                 {item: 'item7', name: 'Cake', price: 25, type: 'Bait', itemID: 7, description: "Use as a parameter in the addBait() method."},
-                {item: 'item8', name: 'Crown', price: 50, type: 'Bait', itemID: 8, description: "Use as a parameter in the Rico.equip() method."},
+                {item: 'item8', name: 'Crown', price: 50, type: 'Item', itemID: 8, description: "Use as a parameter in the Rico.equip() method."},
         ]
 
         // Default text:
