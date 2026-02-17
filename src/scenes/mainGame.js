@@ -21,6 +21,9 @@ import Swordfish from '../assets/Swordfish.png';
 import Pufferfish from '../assets/Pufferfish.png';
 import Megalodon from '../assets/Megalodon.png';
 // Bait images:
+import Apple from '../assets/Apple.png';
+import Pizza from '../assets/Pizza.png';
+import Cake from '../assets/Cake.png';
 
 
 // Fish Data:
@@ -66,7 +69,7 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('player', player);
         this.load.image('fish', fish);
         this.load.image('line', line);
-        // Fish images
+        // Fish Images
         this.load.image('Minnow', Minnow);
         this.load.image('Carp', Carp);
         this.load.image('Bluegill', Bluegill);
@@ -80,6 +83,10 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('Swordfish', Swordfish);
         this.load.image('Pufferfish',Pufferfish);
         this.load.image('Megalodon', Megalodon);
+        // Bait Images
+        this.load.image('apple', Apple);
+        this.load.image('pizza', Pizza);
+        this.load.image('cake', Cake);
 
     }
 
@@ -137,6 +144,7 @@ export default class MainGame extends Phaser.Scene{
         this.moveFreely = true;
         this.rightFacing = true;
         this.canCast = true;
+        this.baitAdded = false;
 
     // C4C default text
         C4C.Editor.setText(`// Enter your code here!\n`);
@@ -149,81 +157,95 @@ export default class MainGame extends Phaser.Scene{
 
     // addBait(baitType)
     C4C.Interpreter.define('addBait', (baitType) => {
-    if (this.canCast) {
-        valid = false;
+    if (!this.canCast) return;
+    if (!baitType) return;
+    baitType = String(baitType).toLowerCase();
 
-        if (baitType === undefined) {
-            baitType = '';
-        } 
-        else if (baitType != ''){
-            // TODO
-            // Check if baitType entered is valid & unlocked (using global variables)--> change boolean 'valid' accordingly
-            // Retrieve the corresponding image path string
-            baitImgVar = baitType.toLowercase();
-        }
+    const baitMap = {
+        apple: 'boughtApple',
+        pizza: 'boughtPizza',
+        cake: 'boughtCake'
+    };
 
-        // Create bait sprite iff baitType is valid & unlocked
-        if (baitType != '' && valid) {
-            if (this.rightFacing) {
-                this.bait = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, baitImgVar).setDisplaySize(15, 30);
-            } else {
-                this.bait = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, baitImgVar).setDisplaySize(15, 30);
-            }
-        }
-        // TODO
-        // Find a way to make the bait follow/tween with the hook (add this.bait in cast method?)
+    const registryKey = baitMap[baitType];
+    if (!registryKey) {
+        //console.log("Invalid bait type");
+        return;
     }
+
+    const isPurchased = this.registry.get(registryKey);
+    if (!isPurchased) {
+        //console.log("Bait not purchased");
+        return;
+    }
+
+    this.baitAdded = true;
+    this.baitChosen = baitType;
+    //console.log("Bait added:", baitType);
 });
 
-    // cast(length)
+
     C4C.Interpreter.define('cast', (length) => {
-    if (this.canCast) {
-        if (length === undefined) length = 100;
-        else if (length > 500) length = 500;
+    if (!this.canCast) return;
 
-        // Create hook sprite
-        if (this.rightFacing) {
-            this.hook = this.physics.add.sprite(this.player.x + 90, this.player.y - 60, 'hook').setDisplaySize(15, 30);
-        } else {
-            this.hook = this.physics.add.sprite(this.player.x - 90, this.player.y - 60, 'hook').setDisplaySize(15, 30);
-        }
+    if (length === undefined) length = 100;
+    else if (length > 500) length = 500;
 
-        this.moveFreely = false;
-        this.canCast = false;
+    this.moveFreely = false;
+    this.canCast = false;
 
-        // fishing line particle emitter
-        const hookemitter = this.add.particles('line', {
-            frame: 'black',
-            speed: 50,
-            scale: { start: 0.5, end: 0},
-            blendMode: 'ADD',
-            lifespan: 1000,
-        });
+    const hookX = this.rightFacing
+        ? this.player.x + 90
+        : this.player.x - 90;
 
-        //add hookemitter to hook
-        hookemitter.startFollow(this.hook, 0, 0)
+    const hookY = this.player.y - 60;
 
-        // Tween hook downward
-        this.tweens.add({
-            targets: this.hook,
-            y: length + 100,
-            duration: 1000,
-            ease: 'Power2',
-            onComplete: () => {
-                // Store collider reference
-                this.hookCollider = this.physics.add.overlap(
-                    this.hook,
-                    this.fishGroup,
-                    handleOverlap,
-                    null,
-                    this
-                );
-                // Reset if no collision after delay
-                this.time.delayedCall(3000, resumeGame, null, this);
-            },
-        });
+    // Create physics hook normally (NOT inside container)
+    this.hook = this.physics.add.sprite(hookX, hookY, 'hook')
+        .setDisplaySize(15, 30);
+
+    this.hook.body.allowGravity = false;
+
+    // Create bait attached visually by positioning relative to hook
+    if (this.baitAdded) {
+        this.bait = this.add.sprite(hookX, hookY + 20, this.baitChosen)
+            .setDisplaySize(25, 25);
+
+        this.hasBaitOnHook = true;
+    } else {
+        this.hasBaitOnHook = false;
     }
+
+    this.baitAdded = false;
+
+    // Tween hook downward
+    this.tweens.add({
+        targets: this.hook,
+        y: length + 100,
+        duration: 1000,
+        ease: 'Power2',
+        onUpdate: () => {
+            // Make bait follow hook manually
+            if (this.bait) {
+                this.bait.x = this.hook.x;
+                this.bait.y = this.hook.y + 20;
+            }
+        },
+        onComplete: () => {
+            this.hookCollider = this.physics.add.overlap(
+                this.hook,
+                this.fishGroup,
+                handleOverlap,
+                null,
+                this
+            );
+
+            this.time.delayedCall(3000, resumeGame, null, this);
+        }
+    });
 });
+
+
 
 
 // Additional Functions ----------------------------------------------------------------
@@ -238,6 +260,13 @@ export default class MainGame extends Phaser.Scene{
             let coins = this.registry.get('coins');
             coins += fish.price || 1;
             this.registry.set('coins', coins);
+
+            // Consume bait if it exists
+            if (this.hasBaitOnHook && this.bait) {
+                this.bait.destroy();
+                this.bait = null;
+                this.hasBaitOnHook = false;
+            }
 
 
         // Stop both and attach fish to hook
@@ -284,10 +313,15 @@ export default class MainGame extends Phaser.Scene{
 }
 
     function resumeGame() {
-        // Clean up collider if still active
+        // Remove overlap collider
         if (this.hookCollider) {
             this.physics.world.removeCollider(this.hookCollider);
             this.hookCollider = null;
+        }
+        // Destroy bait if still attached
+        if (this.bait) {
+            this.bait.destroy();
+            this.bait = null;
         }
         // Destroy hook
         if (this.hook) {
@@ -295,9 +329,11 @@ export default class MainGame extends Phaser.Scene{
             this.hook = null;
         }
         // Reset variables
+        this.hasBaitOnHook = false;
         this.moveFreely = true;
         this.canCast = true;
-    }
+}
+
 //--------------------------------------------------------------------------------------
     }
 
