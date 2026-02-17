@@ -1,4 +1,5 @@
 import C4C from 'c4c-lib';
+import {printlnToConsole, printToConsole} from '../consoleOperations.js';
 import { gameLoopSpeed } from '..';
 import background from '../assets/bkg.png';
 import Phaser from 'phaser';
@@ -146,8 +147,8 @@ export default class MainGame extends Phaser.Scene{
         this.canCast = true;
         this.baitAdded = false;
 
-    // C4C default text
-        C4C.Editor.setText(`// Enter your code here!\n`);
+    // Default text in console
+        printlnToConsole(`Enter your code in the editor!`);
 
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();

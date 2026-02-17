@@ -6,6 +6,7 @@ import MainGame from './scenes/mainGame';
 import TackleBox from './scenes/tacklebox';
 import MyFish from './scenes/myfish';
 import Market from './scenes/market';
+import { printToConsole, printlnToConsole, clearConsole, printErrorToConsole} from './consoleOperations.js';
 
 // Load style.css into our page
 import './assets/style.css';
@@ -13,6 +14,8 @@ import './assets/style.css';
 // Constants, sizes
     const gameWidth = 800;
     const gameHeight = 600;
+
+    const codeOutput = document.getElementById('code-output');
 
 // Theme for the C4C editor.  Look into the codemirror documentation for more options
 const theme = {
@@ -77,8 +80,7 @@ var gameLoop;
 // Switch the scene whenever the "Tackle Box" button is pressed
 document.getElementById('tackle-box').addEventListener('click', () => {
     // Stop running any code that's currently running
-    codeRunner.reset();
-    clearInterval(gameLoop);
+    switchScene()
     // If the current scene is mainGame.js, myfish.js, or market.js, switch to tacklebox.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
@@ -95,8 +97,7 @@ document.getElementById('tackle-box').addEventListener('click', () => {
 // Switch the scene whenever the "🎣" button is pressed
 document.getElementById('MainGame').addEventListener('click', () => {
     // Stop running any code that's currently running
-    codeRunner.reset();
-    clearInterval(gameLoop);
+    switchScene()
     // If the current scene is market.js, or tacklebox.js, or myfish.js, switch to MainGame
     if(game.scene.isActive('TackleBox')){
         game.scene.stop('TackleBox');
@@ -113,8 +114,7 @@ document.getElementById('MainGame').addEventListener('click', () => {
 // Switch the scene whenever the "My Fish" button is pressed
 document.getElementById('my-fish').addEventListener('click', () => {
     // Stop running any code that's currently running
-    codeRunner.reset();
-    clearInterval(gameLoop);
+    switchScene()
     // If the current scene is mainGame.js, tacklebox.js, or market switch to myfish.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
@@ -131,8 +131,7 @@ document.getElementById('my-fish').addEventListener('click', () => {
 // Switch the scene whenever the "Market" button is pressed
 document.getElementById('market').addEventListener('click', () => {
     // Stop running any code that's currently running
-    codeRunner.reset();
-    clearInterval(gameLoop);
+    switchScene()
     // If the current scene is mainGame.js, myfish.js, or tacklebox.js, switch to market.js
     if (game.scene.isActive('MainGame')) {
         game.scene.stop('MainGame');
@@ -161,7 +160,7 @@ document.getElementById('run-code').addEventListener('click', () => {
         codeRunner.check();
     } catch (e) {
         // You may want to give better feedback here
-        alert("There's a problem in your code: "+e);
+        printErrorToConsole(e)
         return;
     }
 
@@ -174,6 +173,27 @@ document.getElementById('run-code').addEventListener('click', () => {
 document.getElementById('game-container').addEventListener('click', () => {
     document.activeElement?.blur()
 })
+
+/**
+ * Some common things that run when switching scenes
+ */
+function switchScene(){
+    codeRunner.reset();
+    clearInterval(gameLoop);
+    clearConsole();
+}
+
+C4C.Interpreter.define('println', (message) => {
+    printlnToConsole(message)
+});
+
+C4C.Interpreter.define('print', (message) => {
+    printToConsole(message)
+});
+
+C4C.Interpreter.define('clear', () => {
+    clearConsole()
+});
 
 
 export {gameLoopSpeed};

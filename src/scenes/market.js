@@ -1,4 +1,5 @@
 import C4C from 'c4c-lib';
+import {printErrorToConsole, printlnToConsole, printToConsole, printWarningToConsole} from '../consoleOperations.js';
 import marketBkg from '../assets/Marketbkg.PNG';
 import item1 from '../assets/Market1-worms.PNG';
 import item2 from '../assets/Market2-apple.png';
@@ -72,7 +73,7 @@ export default class Market extends Phaser.Scene{
         ]
 
         // Default text:
-        C4C.Editor.setText(`// To see item info, enter item number and run: details()\n`);
+        printlnToConsole(`To see item info, enter item number and run: details()`);
 
 
         // Define functions used in the C4C written coding area---------------------
@@ -82,20 +83,20 @@ export default class Market extends Phaser.Scene{
 
             // Handles invalid input:
             if (!i) {
-                C4C.Editor.setText(`// To see item info, enter item number and run: details()\n// Please enter a valid number!\n`);
+                printlnToConsole(`To see item info, enter item number and run: details()`);
+                printErrorToConsole(`Please enter a valid number!`);
                 return;
             }
-            // Item Details in text editor:
-            C4C.Editor.setText(
-                `// Item ID: ${i.itemID}\n` +
-                `// Name: ${i.name}\n` +
-                `// Type: ${i.type}\n` +
-                `// Price: ${i.price} coins\n\n` +
-                `// Description: ${i.description}\n\n`+
-                `// To see item info, enter item number and run: details()\n`
-            );
 
-             highlightItem(ID);
+            printlnToConsole(`Item ID: ${i.itemID}`)
+            printlnToConsole(`Name: ${i.name}`)
+            printlnToConsole(`Type: ${i.type}`)
+            printlnToConsole(`Price: ${i.price} coins`)
+            printlnToConsole()
+            printlnToConsole(`Description: ${i.description}`)
+            printlnToConsole()
+
+            highlightItem(ID);
         });
 
         C4C.Interpreter.define('buy', (ID) => {
@@ -103,7 +104,7 @@ export default class Market extends Phaser.Scene{
             const i = items.find(item => item.itemID === ID);
             // Handles invalid input:
             if (!i) {
-                C4C.Editor.setText(`// Invalid input, try again!`);
+                printlnToConsole('Invalid buy input, try again!')
                 return;
             }
             // Variables:
@@ -111,7 +112,7 @@ export default class Market extends Phaser.Scene{
             let boughtStatus = this.registry.get('bought'+i.name);
             // Check if the item has been purchased already:
             if(boughtStatus){
-                C4C.Editor.setText(`//You've already purchased this item!`);
+                printWarningToConsole(`You've already purchased this item!`);
                 return;
             }
             // Purchase if able:
@@ -120,7 +121,7 @@ export default class Market extends Phaser.Scene{
                 this.registry.set('bought'+i.name, true);
                 //DELETE IMAGE HERE
             } else {
-                C4C.Editor.setText(`// You don't have enough coins!`);
+                printWarningToConsole(`You don't have enough coins!`);
                 return;
             }
         });

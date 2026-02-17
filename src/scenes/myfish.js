@@ -1,4 +1,5 @@
 import C4C from 'c4c-lib';
+import { printlnToConsole } from '../consoleOperations.js';
 
 export default class MyFish extends Phaser.Scene{
     constructor(){
@@ -10,8 +11,8 @@ export default class MyFish extends Phaser.Scene{
     }
 
     create(){
-        C4C.Editor.setText(`// Information about fish goes here\n:)\n`);
-    }
+        printlnToConsole("Information about fish goes above")
+        printlnToConsole(":)")    }
 
     update(){
         // Game Logic
