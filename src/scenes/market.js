@@ -10,6 +10,12 @@ import item5 from '../assets/Market5-pizza.png';
 import item7 from '../assets/Market7-cake.png';
 import item8 from '../assets/Market8-crown.png';
 
+const marketFunctions = [
+    { name: "print", arguments: ["message"], description: "Prints a message to the in-game console." },
+    { name: "details", arguments: ["ID"], description: "Shows details about a market item by its ID." },
+    { name: "buy", arguments: ["ID"], description: "Purchases a market item by its ID if you have enough coins." }
+];
+
 export default class Market extends Phaser.Scene{
     constructor(){
         super('Market');
@@ -127,7 +133,17 @@ export default class Market extends Phaser.Scene{
         });
 
         // Additional Functions ----------------------------------------------------------------
-        
+
+        C4C.Interpreter.define('manual', () => {
+            printlnToConsole("---------------------");
+            for (const fn of marketFunctions) {
+                const args = fn.arguments.join(", ");
+                printlnToConsole(`${fn.name}(${args}) - ${fn.description}`);
+            }
+            printlnToConsole("---------------------");
+        })
+
+
         // Grays out all other items
         const highlightItem = (itemID) => {
         Object.entries(this.itemImages).forEach(([id, img]) => {

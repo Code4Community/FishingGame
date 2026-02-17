@@ -52,6 +52,23 @@ const fishSpecies = [
     {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4], imgName: 'Megalodon', displayX: 500, displayY: 300, price: 100},
     ]
 
+const functions = [
+    {
+        name: "print",
+        arguments: ["message"],
+        description: "Prints out the message passed in to the in-game console."
+    },
+    {
+        name: "addBait",
+        arguments: ["baitType"],
+        description: "Adds a bait to the hook. Valid options: 'apple', 'pizza', 'cake'. Player must own the bait."
+    },
+    {
+        name: "cast",
+        arguments: ["length"],
+        description: "Casts the hook into the water. Optionally specify a length (default 100, max 500)."
+    }
+];
 
 
 export default class MainGame extends Phaser.Scene{
@@ -148,7 +165,7 @@ export default class MainGame extends Phaser.Scene{
         this.baitAdded = false;
 
     // Default text in console
-        printlnToConsole(`Enter your code in the editor!`);
+        printlnToConsole(`Enter your code in the editor! manual() to see various functions!`);
 
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
@@ -185,6 +202,14 @@ export default class MainGame extends Phaser.Scene{
     //console.log("Bait added:", baitType);
 });
 
+    C4C.Interpreter.define('manual', () => {
+        printlnToConsole("---------------------");
+        for (const fn of functions) {
+            const args = fn.arguments.join(", ");
+            printlnToConsole(`${fn.name}(${args}) - ${fn.description}`);
+        }
+        printlnToConsole("---------------------");
+    })
 
     C4C.Interpreter.define('cast', (length) => {
     if (!this.canCast) return;
