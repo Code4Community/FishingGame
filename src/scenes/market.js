@@ -6,7 +6,7 @@ import item2 from '../assets/Market2-apple.png';
 import item3 from '../assets/Market3-equip.png';
 import item4 from '../assets/Market4-flag.png';
 import item5 from '../assets/Market5-pizza.png';
-
+import item6 from '../assets/Market6-baitFor.png';
 import item7 from '../assets/Market7-cake.png';
 import item8 from '../assets/Market8-crown.png';
 
@@ -28,7 +28,7 @@ export default class Market extends Phaser.Scene{
         this.load.image('item3', item3);
         this.load.image('item4', item4);
         this.load.image('item5', item5);
-
+        this.load.image('item6', item6);
         this.load.image('item7', item7);
         this.load.image('item8', item8);
     }
@@ -44,7 +44,7 @@ export default class Market extends Phaser.Scene{
             3: this.add.image(400, 300, 'item3').setDisplaySize(800, 600),
             4: this.add.image(400, 300, 'item4').setDisplaySize(800, 600),
             5: this.add.image(400, 300, 'item5').setDisplaySize(800, 600),
-
+            6: this.add.image(400, 300, 'item6').setDisplaySize(800, 600),
             7: this.add.image(400, 300, 'item7').setDisplaySize(800, 600),
             8: this.add.image(400, 300, 'item8').setDisplaySize(800, 600)
         };

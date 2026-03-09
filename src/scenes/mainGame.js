@@ -22,6 +22,7 @@ import Swordfish from '../assets/Swordfish.png';
 import Pufferfish from '../assets/Pufferfish.png';
 import Megalodon from '../assets/Megalodon.png';
 // Bait images:
+import Worms from '../assets/Worm.png';
 import Apple from '../assets/Apple.png';
 import Pizza from '../assets/Pizza.png';
 import Cake from '../assets/Cake.png';
@@ -102,6 +103,7 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('Pufferfish',Pufferfish);
         this.load.image('Megalodon', Megalodon);
         // Bait Images
+        this.load.image('worms', Worms);
         this.load.image('apple', Apple);
         this.load.image('pizza', Pizza);
         this.load.image('cake', Cake);
@@ -180,6 +182,7 @@ export default class MainGame extends Phaser.Scene{
     baitType = String(baitType).toLowerCase();
 
     const baitMap = {
+        worms: 'boughtWorms',
         apple: 'boughtApple',
         pizza: 'boughtPizza',
         cake: 'boughtCake'
