@@ -51,3 +51,13 @@ export function printWarningToConsole(message = "") {
     codeOutput.innerHTML += "<span id=\"warningText\">" + message + "</span><br>";
 }
 
+/**
+ * Prints an success message to the game console.
+ *
+ * @param {string} message - The warning message.
+ */
+export function printSuccessToConsole(message = "") {
+    codeOutput.scrollTop = codeOutput.scrollHeight;
+    codeOutput.innerHTML += "<span id=\"successText\">" + message + "</span><br>";
+}
+
