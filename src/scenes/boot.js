@@ -32,8 +32,7 @@ export default class Boot extends Phaser.Scene {
     this.registry.set('boughtEquip', false);
     this.registry.set('boughtFlag', false);
     this.registry.set('boughtPizza', false);
-    
-    //+
+    this.registry.set('boughtBaitFor', false);
     this.registry.set('boughtCake', false);
     this.registry.set('boughtCrown', false);
     
