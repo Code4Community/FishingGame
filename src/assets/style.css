@@ -101,5 +101,9 @@ html, body {
 }
 
 #warningText {
-    color: yellow;
+    color: #f9e154;
+}
+
+#successText{
+    color: forestgreen;
 }

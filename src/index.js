@@ -30,7 +30,7 @@ const theme = {
 // Create the C4C editor
 // The functions that you want the code editor to autocomplete
 // If you want to add more on the fly depending on the scene, you will have to create a new editor
-const autocompleteFunctions = ['cast', 'addBait'];
+const autocompleteFunctions = ['cast', 'addBait', 'print', 'println', 'manual', 'clear'];
 C4C.Editor.create(document.getElementById('code-editor'), theme, false, autocompleteFunctions);
 
 // Create the game
@@ -194,6 +194,10 @@ C4C.Interpreter.define('print', (message) => {
 C4C.Interpreter.define('clear', () => {
     clearConsole()
 });
+
+C4C.Interpreter.define('apple', "apple");
+C4C.Interpreter.define('pizza', "pizza");
+C4C.Interpreter.define('cake', "cake");
 
 
 export {gameLoopSpeed};

@@ -1,5 +1,5 @@
 import C4C from 'c4c-lib';
-import {printlnToConsole, printToConsole} from '../consoleOperations.js';
+import {printlnToConsole, printSuccessToConsole, printToConsole, printWarningToConsole} from '../consoleOperations.js';
 import { gameLoopSpeed } from '..';
 import background from '../assets/bkg.png';
 import Phaser from 'phaser';
@@ -171,14 +171,15 @@ export default class MainGame extends Phaser.Scene{
 
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
-
-        
     // Define functions used in the C4C written coding area---------------------
 
     // addBait(baitType)
     C4C.Interpreter.define('addBait', (baitType) => {
     if (!this.canCast) return;
-    if (!baitType) return;
+    if (!baitType) {
+        printWarningToConsole("No bait type on add bait!");
+        return;
+    }
     baitType = String(baitType).toLowerCase();
 
     const baitMap = {
@@ -190,19 +191,19 @@ export default class MainGame extends Phaser.Scene{
 
     const registryKey = baitMap[baitType];
     if (!registryKey) {
-        //console.log("Invalid bait type");
+        printWarningToConsole("Invalid bait type");
         return;
     }
 
     const isPurchased = this.registry.get(registryKey);
     if (!isPurchased) {
-        //console.log("Bait not purchased");
+        printWarningToConsole("Bait not purchased")
         return;
     }
 
     this.baitAdded = true;
     this.baitChosen = baitType;
-    //console.log("Bait added:", baitType);
+    printSuccessToConsole("Bait added: ", baitType);
 });
 
     C4C.Interpreter.define('manual', () => {
