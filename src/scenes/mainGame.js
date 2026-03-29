@@ -130,6 +130,9 @@ export default class MainGame extends Phaser.Scene{
         this.player = this.physics.add.sprite(400, 110, 'player').setDisplaySize(180,120);
         this.player.setCollideWorldBounds(true);
 
+        // Graphics object for the fishing line — created here so it renders behind the hook
+        this.lineGraphics = this.add.graphics();
+
         // Create text displaying coin amount
         this.coinText = this.add.text(30, 30, 'Coins: ' + this.registry.get('coins'), {
             fontSize: '20px',
@@ -376,6 +379,17 @@ export default class MainGame extends Phaser.Scene{
     }
 
     update(){
+
+    // Draw fishing line from rod tip to hook while hook is active
+    this.lineGraphics.clear();
+    if (this.hook) {
+        const rodTipY = this.player.y - 60;
+        this.lineGraphics.lineStyle(1, 0xFFFFF0, 1);
+        this.lineGraphics.beginPath();
+        this.lineGraphics.moveTo(this.hook.x, rodTipY);
+        this.lineGraphics.lineTo(this.hook.x + 4, this.hook.y - 13);
+        this.lineGraphics.strokePath();
+    }
 
     // Conditional logic for keyboard controls
     const speed = this.cursor.shift.isDown ? 300 : 160;
