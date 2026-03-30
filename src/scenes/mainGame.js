@@ -6,7 +6,9 @@ import Phaser from 'phaser';
 import hook from '../assets/Hook.png';
 import player from '../assets/raccoonAndBoat.png';
 import fish from '../assets/testFish.png';
-import line from '../assets/line.png'
+import line from '../assets/line.png';
+import coin from '../assets/Coin.png';
+import rectangle from '../assets/whiterectangle.png';
 // Fish images:
 import Minnow from '../assets/Minnow.png';
 import Carp from '../assets/Carp.png';
@@ -102,6 +104,8 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('player', player);
         this.load.image('fish', fish);
         this.load.image('line', line);
+        this.load.image('coin', coin);
+        this.load.image('rectangle', rectangle);
         // Fish Images
         this.load.image('Minnow', Minnow);
         this.load.image('Carp', Carp);
@@ -134,7 +138,9 @@ export default class MainGame extends Phaser.Scene{
         this.lineGraphics = this.add.graphics();
 
         // Create text displaying coin amount
-        this.coinText = this.add.text(30, 30, 'Coins: ' + this.registry.get('coins'), {
+        this.add.image(90, 40, 'rectangle').setDisplaySize(160, 35);
+        this.add.image(30, 40, 'coin').setDisplaySize(30,30);
+        this.coinText = this.add.text(50, 30, 'Coins: ' + this.registry.get('coins'), {
             fontSize: '20px',
             fill: '#000'
         });

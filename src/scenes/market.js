@@ -50,7 +50,9 @@ export default class Market extends Phaser.Scene{
         };
 
         // Create text displaying coin amount
-        this.coinText = this.add.text(30, 30, 'Coins: ' + this.registry.get('coins'), {
+        this.add.image(90, 40, 'rectangle').setDisplaySize(160, 35);
+        this.add.image(30, 40, 'coin').setDisplaySize(30,30);
+        this.coinText = this.add.text(50, 30, 'Coins: ' + this.registry.get('coins'), {
             fontSize: '20px',
             fill: '#000'
         });

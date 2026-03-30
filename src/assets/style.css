@@ -63,7 +63,7 @@ html, body {
   min-width: 0;
   overflow: hidden;
   z-index: 2;
-  background: #1a1a2e;
+  background: white;
 }
 
 #code-output {
