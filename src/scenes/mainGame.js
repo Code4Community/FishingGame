@@ -38,19 +38,19 @@ const depthZone = [
     ]
 
 const fishSpecies = [
-    {type: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], imgName: 'Minnow',     displayX: 70,  displayY: 15,  price: 1,   weight: 25},
-    {type: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], imgName: 'Carp',       displayX: 100, displayY: 50,  price: 1,   weight: 25},
-    {type: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], imgName: 'Bluegill',   displayX: 70,  displayY: 40,  price: 1,   weight: 25},
-    {type: 'Bass',       speedRange: [-120, 120], depth: depthZone[1], imgName: 'Bass',       displayX: 110, displayY: 40,  price: 2,   weight: 18},
-    {type: 'Catfish',    speedRange: [-120, 120], depth: depthZone[1], imgName: 'Catfish',    displayX: 110, displayY: 50,  price: 2,   weight: 18},
-    {type: 'Trout',      speedRange: [-120, 120], depth: depthZone[1], imgName: 'Trout',      displayX: 100, displayY: 30,  price: 2,   weight: 18},
-    {type: 'Salmon',     speedRange: [-140, 140], depth: depthZone[2], imgName: 'Salmon',     displayX: 105, displayY: 40,  price: 3,   weight: 12},
-    {type: 'Tuna',       speedRange: [-140, 140], depth: depthZone[2], imgName: 'Tuna',       displayX: 110, displayY: 45,  price: 3,   weight: 12},
-    {type: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'RedSnapper', displayX: 90,  displayY: 40,  price: 3,   weight: 12},
-    {type: 'Shark',      speedRange: [-160, 160], depth: depthZone[3], imgName: 'Shark',      displayX: 135, displayY: 70,  price: 4,   weight: 7},
-    {type: 'Swordfish',  speedRange: [-160, 160], depth: depthZone[3], imgName: 'Swordfish',  displayX: 145, displayY: 60,  price: 4,   weight: 7},
-    {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Pufferfish', displayX: 65,  displayY: 50,  price: 4,   weight: 7},
-    {type: 'Megalodon',  speedRange: [-200, 200], depth: depthZone[4], imgName: 'Megalodon',  displayX: 500, displayY: 300, price: 100, weight: 1},
+    {fishName: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 15,  price: 1,   weight: 25},
+    {fishName: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], displayX: 100, displayY: 50,  price: 1,   weight: 25},
+    {fishName: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 40,  price: 1,   weight: 25},
+    {fishName: 'Bass',       speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 40,  price: 2,   weight: 18},
+    {fishName: 'Catfish',    speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 50,  price: 2,   weight: 18},
+    {fishName: 'Trout',      speedRange: [-120, 120], depth: depthZone[1], displayX: 100, displayY: 30,  price: 2,   weight: 18},
+    {fishName: 'Salmon',     speedRange: [-140, 140], depth: depthZone[2], displayX: 105, displayY: 40,  price: 3,   weight: 12},
+    {fishName: 'Tuna',       speedRange: [-140, 140], depth: depthZone[2], displayX: 110, displayY: 45,  price: 3,   weight: 12},
+    {fishName: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], displayX: 90,  displayY: 40,  price: 3,   weight: 12},
+    {fishName: 'Shark',      speedRange: [-160, 160], depth: depthZone[3], displayX: 135, displayY: 70,  price: 4,   weight: 7},
+    {fishName: 'Swordfish',  speedRange: [-160, 160], depth: depthZone[3], displayX: 145, displayY: 60,  price: 4,   weight: 7},
+    {fishName: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], displayX: 65,  displayY: 50,  price: 4,   weight: 7},
+    {fishName: 'Megalodon',  speedRange: [-200, 200], depth: depthZone[4], displayX: 500, displayY: 300, price: 100, weight: 1},
 ];
 
 const megalodonSpecies = fishSpecies[fishSpecies.length - 1];
@@ -316,6 +316,9 @@ export default class MainGame extends Phaser.Scene{
         // Show popup
         showCatchPopup.call(this, fish);
 
+        // Set [fishName]Caught = true in registry
+        this.registry.set('caught' + fish.fishName, true);
+
         // Make them rise together
         this.tweens.add({
             targets: [hook, fish],
@@ -437,9 +440,9 @@ export default class MainGame extends Phaser.Scene{
         if (startX < 250)      velocityX =  Math.abs(velocityX);
         else if (startX > 550) velocityX = -Math.abs(velocityX);
 
-        const f = this.physics.add.sprite(startX, startY, species.imgName)
+        const f = this.physics.add.sprite(startX, startY, species.fishName)
             .setDisplaySize(species.displayX, species.displayY);
-        f.fishName = species.type;
+        f.fishName = species.fishName;
         f.price = species.price;
         f.body.allowGravity = false;
         f.body.onWorldBounds = true;
