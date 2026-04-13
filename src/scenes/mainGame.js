@@ -6,7 +6,9 @@ import Phaser from 'phaser';
 import hook from '../assets/Hook.png';
 import player from '../assets/raccoonAndBoat.png';
 import fish from '../assets/testFish.png';
-import line from '../assets/line.png'
+import line from '../assets/line.png';
+import coin from '../assets/Coin.png';
+import rectangle from '../assets/whiterectangle.png';
 // Fish images:
 import Minnow from '../assets/Minnow.png';
 import Carp from '../assets/Carp.png';
@@ -38,20 +40,34 @@ const depthZone = [
     ]
 
 const fishSpecies = [
-    {type: 'Minnow', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Minnow', displayX: 70, displayY: 15, price: 1},
-    {type: 'Carp', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Carp', displayX: 100, displayY: 50, price: 1},
-    {type: 'Bluegill', speedRange: [-100, 100], depth: depthZone[0], imgName: 'Bluegill', displayX: 70, displayY: 40, price: 1},
-    {type: 'Bass', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Bass', displayX: 110, displayY: 40, price: 2},
-    {type: 'Catfish', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Catfish', displayX: 110, displayY: 50, price: 2},
-    {type: 'Trout', speedRange: [-120, 120], depth: depthZone[1], imgName: 'Trout', displayX: 100, displayY: 30, price: 2},
-    {type: 'Salmon', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Salmon', displayX: 105, displayY: 40, price: 3},
-    {type: 'Tuna', speedRange: [-140, 140], depth: depthZone[2], imgName: 'Tuna', displayX: 110, displayY: 45, price: 3},
-    {type: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], imgName: 'RedSnapper', displayX: 90, displayY: 40, price: 3},
-    {type: 'Shark', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Shark', displayX: 135, displayY: 70, price: 4},
-    {type: 'Swordfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Swordfish', displayX: 145, displayY: 60, price: 4},
-    {type: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], imgName: 'Pufferfish', displayX: 65, displayY: 50, price: 4},
-    {type: 'Megalodon', speedRange: [-200, 200], depth: depthZone[4], imgName: 'Megalodon', displayX: 500, displayY: 300, price: 100},
-    ]
+    {fishName: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 15,  price: 1,   weight: 25},
+    {fishName: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], displayX: 100, displayY: 50,  price: 1,   weight: 25},
+    {fishName: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 40,  price: 1,   weight: 25},
+    {fishName: 'Bass',       speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 40,  price: 2,   weight: 18},
+    {fishName: 'Catfish',    speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 50,  price: 2,   weight: 18},
+    {fishName: 'Trout',      speedRange: [-120, 120], depth: depthZone[1], displayX: 100, displayY: 30,  price: 2,   weight: 18},
+    {fishName: 'Salmon',     speedRange: [-140, 140], depth: depthZone[2], displayX: 105, displayY: 40,  price: 3,   weight: 12},
+    {fishName: 'Tuna',       speedRange: [-140, 140], depth: depthZone[2], displayX: 110, displayY: 45,  price: 3,   weight: 12},
+    {fishName: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], displayX: 90,  displayY: 40,  price: 3,   weight: 12},
+    {fishName: 'Shark',      speedRange: [-160, 160], depth: depthZone[3], displayX: 135, displayY: 70,  price: 4,   weight: 7},
+    {fishName: 'Swordfish',  speedRange: [-160, 160], depth: depthZone[3], displayX: 145, displayY: 60,  price: 4,   weight: 7},
+    {fishName: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], displayX: 65,  displayY: 50,  price: 4,   weight: 7},
+    {fishName: 'Megalodon',  speedRange: [-200, 200], depth: depthZone[4], displayX: 500, displayY: 300, price: 100, weight: 1},
+];
+
+const megalodonSpecies = fishSpecies[fishSpecies.length - 1];
+
+// Pre-compute total weight once so spawnFish doesn't recalculate every call
+const totalFishWeight = fishSpecies.reduce((sum, s) => sum + s.weight, 0);
+
+function getWeightedRandomFish() {
+    let roll = Phaser.Math.Between(1, totalFishWeight);
+    for (const species of fishSpecies) {
+        roll -= species.weight;
+        if (roll <= 0) return species;
+    }
+    return fishSpecies[fishSpecies.length - 1];
+}
 
 const functions = [
     {
@@ -88,6 +104,8 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('player', player);
         this.load.image('fish', fish);
         this.load.image('line', line);
+        this.load.image('coin', coin);
+        this.load.image('rectangle', rectangle);
         // Fish Images
         this.load.image('Minnow', Minnow);
         this.load.image('Carp', Carp);
@@ -116,8 +134,13 @@ export default class MainGame extends Phaser.Scene{
         this.player = this.physics.add.sprite(400, 110, 'player').setDisplaySize(180,120);
         this.player.setCollideWorldBounds(true);
 
+        // Graphics object for the fishing line — created here so it renders behind the hook
+        this.lineGraphics = this.add.graphics();
+
         // Create text displaying coin amount
-        this.coinText = this.add.text(30, 30, 'Coins: ' + this.registry.get('coins'), {
+        this.add.image(90, 40, 'rectangle').setDisplaySize(160, 35);
+        this.add.image(30, 40, 'coin').setDisplaySize(30,30);
+        this.coinText = this.add.text(50, 30, 'Coins: ' + this.registry.get('coins'), {
             fontSize: '20px',
             fill: '#000'
         });
@@ -127,38 +150,31 @@ export default class MainGame extends Phaser.Scene{
             this
         );
           this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-            this.registry.events.off(
-            'changedata-coins',
-            this.onCoinsChanged,
-            this
-            );
+            this.registry.events.off('changedata-coins', this.onCoinsChanged, this);
+            this.physics.world?.off('worldbounds', this.onFishWorldBounds);
+            this.megalodonTimer?.remove();
         });
 
         this.fishGroup = this.physics.add.group();
-        for (let i = 0; i< 13; i++) {
-
-            // Random starting position
-            const species = Phaser.Utils.Array.GetRandom(fishSpecies);
-            const startX = Phaser.Math.Between(100, 700);
-            const startY = Phaser.Math.Between(species.depth.min + 10, species.depth.max - 10);
-            let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
-            if (velocityX === 0) velocityX = 100; // ensure nonzero
-
-            // Create fish
-            const f = this.physics.add.sprite(startX, startY, species.imgName).setDisplaySize(species.displayX, species.displayY);
-            f.fishName = species.type;
-            f.price = species.price;
-            f.body.allowGravity = false;
-            f.setBounce(1, 1);
-            f.setCollideWorldBounds(true);
-            f.depthRange = species.depth;
-
-            // Flip sprite based on direction
-            f.setFlipX(velocityX > 0);
-
-            this.fishGroup.add(f);
-            f.setVelocity(velocityX, 0);
+        for (let i = 0; i < 15; i++) {
+            this.spawnFish();
         }
+
+        // Guarantee a Megalodon spawns every 40 seconds regardless of weighted random
+        this.megalodonTimer = this.time.addEvent({
+            delay: 40000,
+            callback: () => this.spawnFish(true, megalodonSpecies),
+            loop: true,
+        });
+
+        // Flip fish sprite when they bounce off world bounds instead of checking every frame
+        this.onFishWorldBounds = (body) => {
+            const f = body.gameObject;
+            if (f && this.fishGroup.contains(f)) {
+                f.setFlipX(body.velocity.x > 0);
+            }
+        };
+        this.physics.world.on('worldbounds', this.onFishWorldBounds);
 
     // Variables
         this.moveFreely = true;
@@ -306,6 +322,9 @@ export default class MainGame extends Phaser.Scene{
         // Show popup
         showCatchPopup.call(this, fish);
 
+        // Set [fishName]Caught = true in registry
+        this.registry.set('caught' + fish.fishName, true);
+
         // Make them rise together
         this.tweens.add({
             targets: [hook, fish],
@@ -315,6 +334,7 @@ export default class MainGame extends Phaser.Scene{
             onComplete: () => {
                 fish.destroy();
                 hook.destroy();
+                this.spawnFish(true);
             },
         });
     }
@@ -369,16 +389,19 @@ export default class MainGame extends Phaser.Scene{
 
     update(){
 
+    // Draw fishing line from rod tip to hook while hook is active
+    this.lineGraphics.clear();
+    if (this.hook) {
+        const rodTipY = this.player.y - 60;
+        this.lineGraphics.lineStyle(1, 0xFFFFF0, 1);
+        this.lineGraphics.beginPath();
+        this.lineGraphics.moveTo(this.hook.x, rodTipY);
+        this.lineGraphics.lineTo(this.hook.x + 4, this.hook.y - 13);
+        this.lineGraphics.strokePath();
+    }
+
     // Conditional logic for keyboard controls
     const speed = this.cursor.shift.isDown ? 300 : 160;
-    const depthZone = [
-        {min: 200, max: 300}, // Shallow
-        {min: 300, max: 400}, // Mid
-        {min: 400, max: 500},  // Deep
-        {min: 500, max: 600},  // Very Deep
-        {min: 545, max: 580}  // Abyss
-    ]
-
 
     if(this.moveFreely) {
         // Boat & Raccoon movement
@@ -397,52 +420,51 @@ export default class MainGame extends Phaser.Scene{
             } else {
                 this.player.setVelocityX(0);
                 this.canCast = true;
-            } 
+            }
     }
-       
+
+        // Collect out-of-bounds fish before destroying to avoid mutating during iterate
+        const toRespawn = [];
         this.fishGroup.children.iterate((fish) => {
-            // Flip sprite based on velocity
-            if(fish.body.velocity.x > 0) {
-                fish.setFlipX(true);
-            } else if (fish.body.velocity.x < 0) {
-                fish.setFlipX(false);
-            }
-
-            // Delete fish if out of screen bounds and spawn new
             if (fish.x < -150 || fish.x > this.scale.width + 150) {
-                fish.destroy();
-                // Random starting position
-                const species = Phaser.Utils.Array.GetRandom(fishSpecies);
-                const startX = Phaser.Math.Between(100, 700);
-                const startY = Phaser.Math.Between(species.depth.min + 10, species.depth.max - 10);
-                let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
-                if (velocityX === 0) velocityX = 100; // ensure nonzero
-
-                // Create fish
-                const f = this.physics.add.sprite(startX, startY, species.imgName).setDisplaySize(species.displayX, species.displayY);
-                f.fishName = species.type;
-                f.price = species.price;
-                f.body.allowGravity = false;
-                f.setBounce(1, 1);
-                f.setCollideWorldBounds(true);
-                f.depthRange = species.depth;
-
-                // Flip sprite based on direction
-                f.setFlipX(velocityX > 0);
-
-                // Tween for fade-in effect
-                f.alpha = 0; // Start fully transparent
-                this.tweens.add({
-                    targets: f,
-                    alpha: 1, // Fade in to full opacity
-                    duration: 1000, // 1 second duration
-                    ease: 'Power2', // Optional easing function
-                });
-
-                this.fishGroup.add(f);
-                f.setVelocity(velocityX, 0);
+                toRespawn.push(fish);
             }
-        })
+        });
+        toRespawn.forEach(fish => {
+            fish.destroy();
+            this.spawnFish(true);
+        });
+    }
+
+    spawnFish(fadeIn = false, species = null) {
+        if (!species) species = getWeightedRandomFish();
+        const startX = Phaser.Math.Between(100, 700);
+        const startY = Phaser.Math.Between(species.depth.min + 10, species.depth.max - 10);
+        let velocityX = Phaser.Math.RND.pick([species.speedRange[0], species.speedRange[1]]);
+
+        // Fish near the left edge face right, near the right edge face left
+        if (startX < 250)      velocityX =  Math.abs(velocityX);
+        else if (startX > 550) velocityX = -Math.abs(velocityX);
+
+        const f = this.physics.add.sprite(startX, startY, species.fishName)
+            .setDisplaySize(species.displayX, species.displayY);
+        f.fishName = species.fishName;
+        f.price = species.price;
+        f.body.allowGravity = false;
+        f.body.onWorldBounds = true;
+        f.setBounce(1, 1);
+        f.setCollideWorldBounds(true);
+        f.depthRange = species.depth;
+        f.setFlipX(velocityX > 0);
+
+        if (fadeIn) {
+            f.alpha = 0;
+            this.tweens.add({ targets: f, alpha: 1, duration: 1000, ease: 'Power2' });
+        }
+
+        this.fishGroup.add(f);
+        f.setVelocity(velocityX, 0);
+        return f;
     }
 
     onCoinsChanged(parent, value) {

@@ -49,7 +49,9 @@ export default class Market extends Phaser.Scene{
         };
 
         // Create text displaying coin amount
-        this.coinText = this.add.text(30, 30, 'Coins: ' + this.registry.get('coins'), {
+        this.add.image(90, 40, 'rectangle').setDisplaySize(160, 35);
+        this.add.image(30, 40, 'coin').setDisplaySize(30,30);
+        this.coinText = this.add.text(50, 30, 'Coins: ' + this.registry.get('coins'), {
             fontSize: '20px',
             fill: '#000'
         });
@@ -72,7 +74,7 @@ export default class Market extends Phaser.Scene{
                 {item: 'item3', name: 'Equip', price: 20, type: 'Method', itemID: 3, description: "An instance method.\n// Use on either Rico or the boat to equip an item.\n// Example:\n// Rico.equip(crown);\n// boat.equip(flag);"},
                 {item: 'item4', name: 'Flag', price: 10, type: 'Item', itemID: 4, description: "Use as a parameter in the boat.equip() method."},
                 {item: 'item5', name: 'Pizza', price: 15, type: 'Bait', itemID: 5, description: "Use as a parameter in the addBait() method."},
-                {item: 'item6', name: 'baitFor', price: 20, type: 'Method', itemID: 6, description: "A static method.\n// Use to find what bait is needed for each species of fish. \n// Example:\n// baitFor(tuna);"},
+                {item: 'item6', name: 'BaitFor', price: 20, type: 'Method', itemID: 6, description: "A static method.\n// Use to find what bait is needed for each species of fish. \n// Example:\n// baitFor(tuna);"},
                 {item: 'item7', name: 'Cake', price: 25, type: 'Bait', itemID: 7, description: "Use as a parameter in the addBait() method."},
                 {item: 'item8', name: 'Crown', price: 50, type: 'Item', itemID: 8, description: "Use as a parameter in the Rico.equip() method."},
         ]

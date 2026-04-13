@@ -20,6 +20,19 @@ html, body {
 #navbar {
   flex-shrink: 0;
   z-index: 10;
+  background: #274b54;
+}
+
+#navText{
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 90px;
+  font-weight: bold;
+  font-size:xx-large;
+  font-family:'Courier New', Courier, monospace;
 }
 
 #main_view {
@@ -63,7 +76,7 @@ html, body {
   min-width: 0;
   overflow: hidden;
   z-index: 2;
-  background: #1a1a2e;
+  background: white;
 }
 
 #code-output {
@@ -76,9 +89,14 @@ html, body {
 }
 
 .gameText {
-  color: seagreen;
-  margin-left: 15px;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: darkolivegreen;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 90px;
+  font-weight: bold;
+  font-family:'Courier New', Courier, monospace;
 }
 
 .gameUI {
