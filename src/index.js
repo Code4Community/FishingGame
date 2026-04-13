@@ -76,6 +76,8 @@ const codeRunner = C4C.Runner.createRunner();
 const gameLoopSpeed = 1000;
 var gameLoop;
 
+const pageCode = new Map();
+
 
 // Switch the scene whenever the "Tackle Box" button is pressed
 document.getElementById('tackle-box').addEventListener('click', () => {
@@ -83,15 +85,20 @@ document.getElementById('tackle-box').addEventListener('click', () => {
     switchScene()
     // If the current scene is mainGame.js, myfish.js, or market.js, switch to tacklebox.js
     if (game.scene.isActive('MainGame')) {
+        saveCode('MainGame')
         game.scene.stop('MainGame');
         game.scene.start('TackleBox');
     } else if(game.scene.isActive('MyFish')) {
+        saveCode('MyFish')
         game.scene.stop('MyFish');
         game.scene.start('TackleBox');
     } else if(game.scene.isActive('Market')) {
+        saveCode('Market')
         game.scene.stop('Market');
         game.scene.start('TackleBox');
     }
+
+    loadCode("TackleBox");
 });
 
 // Switch the scene whenever the "🎣" button is pressed
@@ -100,15 +107,20 @@ document.getElementById('MainGame').addEventListener('click', () => {
     switchScene()
     // If the current scene is market.js, or tacklebox.js, or myfish.js, switch to MainGame
     if(game.scene.isActive('TackleBox')){
+        saveCode('Tacklebox')
         game.scene.stop('TackleBox');
         game.scene.start('MainGame');
     } else if (game.scene.isActive('Market')){
+        saveCode('Market')
         game.scene.stop('Market')
         game.scene.start('MainGame')
     } else if (game.scene.isActive('MyFish')){
+        saveCode('MyFish')
         game.scene.stop('MyFish');
         game.scene.start('MainGame');
     }
+
+    loadCode("MainGame");
 });
 
 // Switch the scene whenever the "My Fish" button is pressed
@@ -117,15 +129,20 @@ document.getElementById('my-fish').addEventListener('click', () => {
     switchScene()
     // If the current scene is mainGame.js, tacklebox.js, or market switch to myfish.js
     if (game.scene.isActive('MainGame')) {
+        saveCode('MainGame')
         game.scene.stop('MainGame');
         game.scene.start('MyFish');
     } else if(game.scene.isActive('TackleBox')){
+        saveCode('TackleBox')
         game.scene.stop('TackleBox');
         game.scene.start('MyFish');
     } else if (game.scene.isActive('Market')){
+        saveCode('Market')
         game.scene.stop('Market');
         game.scene.start('MyFish');
     }
+
+    loadCode("MyFish");
 });
 
 // Switch the scene whenever the "Market" button is pressed
@@ -134,15 +151,20 @@ document.getElementById('market').addEventListener('click', () => {
     switchScene()
     // If the current scene is mainGame.js, myfish.js, or tacklebox.js, switch to market.js
     if (game.scene.isActive('MainGame')) {
+        saveCode('MainGame')
         game.scene.stop('MainGame');
         game.scene.start('Market');
     } else if(game.scene.isActive('MyFish')){
+        saveCode('MyFish')
         game.scene.stop('MyFish');
         game.scene.start('Market');
     } else if (game.scene.isActive('TackleBox')){
+        saveCode('Tacklebox')
         game.scene.stop('TackleBox');
         game.scene.start('Market');
-    }  
+    }
+
+    loadCode("Market");
 });
 
 // Run the code whenever the "Run Code" button is pressed
@@ -198,6 +220,14 @@ C4C.Interpreter.define('clear', () => {
 C4C.Interpreter.define('apple', "apple");
 C4C.Interpreter.define('pizza', "pizza");
 C4C.Interpreter.define('cake', "cake");
+
+function saveCode(page){
+    pageCode[page] = C4C.Editor.getText().replaceAll(/\/\/.*/g, '');
+}
+
+function loadCode(page){
+    C4C.Editor.setText(pageCode[page]);
+}
 
 
 export {gameLoopSpeed};
