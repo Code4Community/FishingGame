@@ -31,7 +31,7 @@ html, body {
 }
 
 #editor-game-row {
-  flex: 0 0 80%;
+  flex: 0 0 100%;
   display: flex;
   min-height: 0;
   overflow: hidden;
@@ -67,7 +67,7 @@ html, body {
 }
 
 #code-output {
-  flex: 0 0 20%;
+  flex: 0 0 30%;
   min-height: 0;
   overflow: auto;
   padding: 8px;

@@ -34,7 +34,6 @@ export default class Market extends Phaser.Scene{
     }
 
     create(){
-
     // Add images
         this.add.image(400, 300, 'marketBkg').setDisplaySize(800, 600);
         // Items for sale: Create & store
@@ -125,7 +124,7 @@ export default class Market extends Phaser.Scene{
             if (coins >= i.price) {
                 this.registry.set('coins', coins -= i.price);
                 this.registry.set('bought'+i.name, true);
-                //DELETE IMAGE HERE
+                this.itemImages[i.itemID].setAlpha(0);
             } else {
                 printWarningToConsole(`You don't have enough coins!`);
                 return;
