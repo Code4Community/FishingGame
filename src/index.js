@@ -217,11 +217,32 @@ C4C.Interpreter.define('clear', () => {
     clearConsole()
 });
 
+// All the items to be used has constants
 C4C.Interpreter.define('worm', "worms");
 C4C.Interpreter.define('worms', "worms");
 C4C.Interpreter.define('apple', "apple");
 C4C.Interpreter.define('pizza', "pizza");
 C4C.Interpreter.define('cake', "cake");
+
+// All the fish to be used has constants
+C4C.Interpreter.define("minnow", "Minnow");
+C4C.Interpreter.define("carp", "Carp");
+C4C.Interpreter.define("bluegill", "Bluegill");
+
+C4C.Interpreter.define("bass", "Bass");
+C4C.Interpreter.define("catfish", "Catfish");
+C4C.Interpreter.define("trout", "Trout");
+
+C4C.Interpreter.define("salmon", "Salmon");
+C4C.Interpreter.define("tuna", "Tuna");
+C4C.Interpreter.define("redsnapper", "RedSnapper");
+
+C4C.Interpreter.define("shark", "Shark");
+C4C.Interpreter.define("swordfish", "Swordfish");
+C4C.Interpreter.define("pufferfish", "Pufferfish");
+
+C4C.Interpreter.define("megalodon", "Megalodon");
+
 
 function saveCode(page){
     pageCode[page] = C4C.Editor.getText().replaceAll(/\/\/.*/g, '');

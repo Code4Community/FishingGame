@@ -40,19 +40,19 @@ const depthZone = [
     ]
 
 const fishSpecies = [
-    {fishName: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 15,  price: 1,   weight: 25},
-    {fishName: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], displayX: 100, displayY: 50,  price: 1,   weight: 25},
-    {fishName: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 40,  price: 1,   weight: 25},
-    {fishName: 'Bass',       speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 40,  price: 2,   weight: 18},
-    {fishName: 'Catfish',    speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 50,  price: 2,   weight: 18},
-    {fishName: 'Trout',      speedRange: [-120, 120], depth: depthZone[1], displayX: 100, displayY: 30,  price: 2,   weight: 18},
-    {fishName: 'Salmon',     speedRange: [-140, 140], depth: depthZone[2], displayX: 105, displayY: 40,  price: 3,   weight: 12},
-    {fishName: 'Tuna',       speedRange: [-140, 140], depth: depthZone[2], displayX: 110, displayY: 45,  price: 3,   weight: 12},
-    {fishName: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], displayX: 90,  displayY: 40,  price: 3,   weight: 12},
-    {fishName: 'Shark',      speedRange: [-160, 160], depth: depthZone[3], displayX: 135, displayY: 70,  price: 4,   weight: 7},
-    {fishName: 'Swordfish',  speedRange: [-160, 160], depth: depthZone[3], displayX: 145, displayY: 60,  price: 4,   weight: 7},
-    {fishName: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], displayX: 65,  displayY: 50,  price: 4,   weight: 7},
-    {fishName: 'Megalodon',  speedRange: [-200, 200], depth: depthZone[4], displayX: 500, displayY: 300, price: 100, weight: 1},
+    {fishName: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 15,  price: 1,   weight: 25, bait: "none", requiredItems: {}},
+    {fishName: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], displayX: 100, displayY: 50,  price: 1,   weight: 25, bait: "none", requiredItems: {}},
+    {fishName: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 40,  price: 1,   weight: 25, bait: "none", requiredItems: {}},
+    {fishName: 'Bass',       speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 40,  price: 2,   weight: 18, bait: "worms", requiredItems: {}},
+    {fishName: 'Catfish',    speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 50,  price: 2,   weight: 18, bait: "apple", requiredItems: {}},
+    {fishName: 'Trout',      speedRange: [-120, 120], depth: depthZone[1], displayX: 100, displayY: 30,  price: 2,   weight: 18, bait: "apple", requiredItems: {}},
+    {fishName: 'Salmon',     speedRange: [-140, 140], depth: depthZone[2], displayX: 105, displayY: 40,  price: 3,   weight: 12, bait: "worms", requiredItems: {}},
+    {fishName: 'Tuna',       speedRange: [-140, 140], depth: depthZone[2], displayX: 110, displayY: 45,  price: 3,   weight: 12, bait: "pizza", requiredItems: ["Flag"]},
+    {fishName: 'RedSnapper', speedRange: [-140, 140], depth: depthZone[2], displayX: 90,  displayY: 40,  price: 3,   weight: 12, bait: "cake", requiredItems: ["Flag"]},
+    {fishName: 'Shark',      speedRange: [-160, 160], depth: depthZone[3], displayX: 135, displayY: 70,  price: 4,   weight: 7, bait: "pizza", requiredItems: ["Flag"]},
+    {fishName: 'Swordfish',  speedRange: [-160, 160], depth: depthZone[3], displayX: 145, displayY: 60,  price: 4,   weight: 7, bait: "apple", requiredItems: ["Flag"]},
+    {fishName: 'Pufferfish', speedRange: [-160, 160], depth: depthZone[3], displayX: 65,  displayY: 50,  price: 4,   weight: 7, bait: "pizza", requiredItems: ["Flag"]},
+    {fishName: 'Megalodon',  speedRange: [-200, 200], depth: depthZone[4], displayX: 500, displayY: 300, price: 100, weight: 1, bait: "cake", requiredItems: ["Flag", "Crown"]},
 ];
 
 const megalodonSpecies = fishSpecies[fishSpecies.length - 1];
@@ -79,6 +79,11 @@ const functions = [
         name: "addBait",
         arguments: ["baitType"],
         description: "Adds a bait to the hook. Valid options: 'apple', 'pizza', 'cake'. Player must own the bait."
+    },
+    {
+        name: "baitFor",
+        arguments: ["fish"],
+        description: "Gets the bait that is needed for the given fish."
     },
     {
         name: "cast",
@@ -188,6 +193,17 @@ export default class MainGame extends Phaser.Scene{
     // Keyboard Input
         this.cursor = this.input.keyboard.createCursorKeys();
     // Define functions used in the C4C written coding area---------------------
+
+    C4C.Interpreter.define('baitFor', (fishName) => {
+        const fish = fishSpecies.find(f => f.fishName === fishName)
+
+        if (!fish) {
+            printWarningToConsole("Fish doesn't exist!")
+            return null
+        }
+
+        return fish.bait
+    })
 
     // addBait(baitType)
     C4C.Interpreter.define('addBait', (baitType) => {
