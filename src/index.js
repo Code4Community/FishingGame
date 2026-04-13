@@ -217,6 +217,8 @@ C4C.Interpreter.define('clear', () => {
     clearConsole()
 });
 
+C4C.Interpreter.define('worm', "worms");
+C4C.Interpreter.define('worms', "worms");
 C4C.Interpreter.define('apple', "apple");
 C4C.Interpreter.define('pizza', "pizza");
 C4C.Interpreter.define('cake', "cake");
