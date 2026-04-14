@@ -301,7 +301,6 @@ export default class MainGame extends Phaser.Scene{
                 null,
                 this
             );
-
             this.time.delayedCall(3000, resumeGame, null, this);
         }
     });
@@ -311,25 +310,34 @@ export default class MainGame extends Phaser.Scene{
 
 
 // Additional Functions ----------------------------------------------------------------
-    
+
     function handleOverlap(hook, fish) {
+        var caughtFish = false
         // Disable collider immediately
         if (this.hookCollider) {
             this.physics.world.removeCollider(this.hookCollider);
             this.hookCollider = null;
         }
+            // Consume bait if it exists
+        const isBaitMatch = (fish.bait === "none") || (this.hasBaitOnHook && fish.bait === this.baitChosen);
 
+        if (isBaitMatch) {
             let coins = this.registry.get('coins');
             coins += fish.price || 1;
             this.registry.set('coins', coins);
+            caughtFish = true;
 
-            // Consume bait if it exists
             if (this.hasBaitOnHook && this.bait) {
                 this.bait.destroy();
                 this.bait = null;
                 this.hasBaitOnHook = false;
             }
+        }
 
+        // returns early if the fish isn't caught
+        if(!caughtFish){
+            return
+        }
 
         // Stop both and attach fish to hook
         fish.body.setVelocity(0);
@@ -379,8 +387,15 @@ export default class MainGame extends Phaser.Scene{
 }
 
     function resumeGame() {
+        this.tweens.add({
+            targets: [this.hook],
+            y: 110,
+            duration: 1500,
+            ease: 'Power1',
+            onComplete: () => {
         // Remove overlap collider
         if (this.hookCollider) {
+
             this.physics.world.removeCollider(this.hookCollider);
             this.hookCollider = null;
         }
@@ -398,6 +413,8 @@ export default class MainGame extends Phaser.Scene{
         this.hasBaitOnHook = false;
         this.moveFreely = true;
         this.canCast = true;
+            },
+        });
 }
 
 //--------------------------------------------------------------------------------------
@@ -466,6 +483,7 @@ export default class MainGame extends Phaser.Scene{
             .setDisplaySize(species.displayX, species.displayY);
         f.fishName = species.fishName;
         f.price = species.price;
+        f.bait = species.bait;
         f.body.allowGravity = false;
         f.body.onWorldBounds = true;
         f.setBounce(1, 1);
