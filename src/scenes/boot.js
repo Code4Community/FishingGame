@@ -10,6 +10,7 @@ export default class Boot extends Phaser.Scene {
 
     // Global variables set in the registry:-------------------------------
     this.registry.set('coins', 0);
+    this.registry.set('playerTexture', "player");
 
     // Fish caught status
     this.registry.set('caughtMinnow', false);
@@ -35,6 +36,10 @@ export default class Boot extends Phaser.Scene {
     this.registry.set('boughtBaitFor', false);
     this.registry.set('boughtCake', false);
     this.registry.set('boughtCrown', false);
+
+    // Equipped status
+    this.registry.set('crownEquipped', false);
+    this.registry.set('flagEquipped', false);
     
     // --------------------------------------------------------------------
 

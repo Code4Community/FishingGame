@@ -30,7 +30,7 @@ const theme = {
 // Create the C4C editor
 // The functions that you want the code editor to autocomplete
 // If you want to add more on the fly depending on the scene, you will have to create a new editor
-const autocompleteFunctions = ['cast', 'addBait', 'print', 'println', 'manual', 'clear'];
+const autocompleteFunctions = ['cast', 'addBait', 'print', 'println', 'manual', 'clear', 'ricoequip'];
 C4C.Editor.create(document.getElementById('code-editor'), theme, false, autocompleteFunctions);
 
 // Create the game
@@ -223,6 +223,9 @@ C4C.Interpreter.define('worms', "worms");
 C4C.Interpreter.define('apple', "apple");
 C4C.Interpreter.define('pizza', "pizza");
 C4C.Interpreter.define('cake', "cake");
+C4C.Interpreter.define('crown', "crown");
+C4C.Interpreter.define('crownflag', "crownflag");
+C4C.Interpreter.define('flag',"flag");
 
 // All the fish to be used has constants
 C4C.Interpreter.define("minnow", "Minnow");

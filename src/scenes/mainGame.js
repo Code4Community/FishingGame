@@ -5,6 +5,9 @@ import background from '../assets/bkg.png';
 import Phaser from 'phaser';
 import hook from '../assets/Hook.png';
 import player from '../assets/raccoonAndBoat.png';
+import playerCrown from '../assets/rico-boat_crown.png';
+import playerFlag from '../assets/rico-boat_flag.png';
+import playerCrownFlag from '../assets/rico-boat_crownFlag.png';
 import fish from '../assets/testFish.png';
 import line from '../assets/line.png';
 import coin from '../assets/Coin.png';
@@ -40,9 +43,9 @@ const depthZone = [
     ]
 
 const fishSpecies = [
-    {fishName: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 15,  price: 1,   weight: 25, bait: "none", requiredItems: {}},
-    {fishName: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], displayX: 100, displayY: 50,  price: 1,   weight: 25, bait: "none", requiredItems: {}},
-    {fishName: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 40,  price: 1,   weight: 25, bait: "none", requiredItems: {}},
+    {fishName: 'Minnow',     speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 15,  price: 100,   weight: 25, bait: "none", requiredItems: {}},
+    {fishName: 'Carp',       speedRange: [-100, 100], depth: depthZone[0], displayX: 100, displayY: 50,  price: 100,   weight: 25, bait: "none", requiredItems: {}},
+    {fishName: 'Bluegill',   speedRange: [-100, 100], depth: depthZone[0], displayX: 70,  displayY: 40,  price: 100,   weight: 25, bait: "none", requiredItems: {}},
     {fishName: 'Bass',       speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 40,  price: 2,   weight: 18, bait: "worms", requiredItems: {}},
     {fishName: 'Catfish',    speedRange: [-120, 120], depth: depthZone[1], displayX: 110, displayY: 50,  price: 2,   weight: 18, bait: "apple", requiredItems: {}},
     {fishName: 'Trout',      speedRange: [-120, 120], depth: depthZone[1], displayX: 100, displayY: 30,  price: 2,   weight: 18, bait: "apple", requiredItems: {}},
@@ -89,6 +92,11 @@ const functions = [
         name: "cast",
         arguments: ["length"],
         description: "Casts the hook into the water. Optionally specify a length (default 100, max 500)."
+    },
+    {
+        name: "ricoequip",
+        arguments: ["equipment"],
+        description: "Rico will equip the object passed as a parameter."
     }
 ];
 
@@ -107,6 +115,11 @@ export default class MainGame extends Phaser.Scene{
         this.load.image('background', background);
         this.load.image('hook', hook);
         this.load.image('player', player);
+
+        this.load.image('crown', playerCrown);
+        this.load.image('flag', playerFlag);
+        this.load.image('crownflag', playerCrownFlag);
+
         this.load.image('fish', fish);
         this.load.image('line', line);
         this.load.image('coin', coin);
@@ -138,6 +151,7 @@ export default class MainGame extends Phaser.Scene{
         this.add.image(400, 300, 'background').setDisplaySize(800, 600);
         this.player = this.physics.add.sprite(400, 110, 'player').setDisplaySize(180,120);
         this.player.setCollideWorldBounds(true);
+        this.player.setTexture(this.registry.get('playerTexture'));
 
         // Graphics object for the fishing line — created here so it renders behind the hook
         this.lineGraphics = this.add.graphics();
@@ -237,6 +251,49 @@ export default class MainGame extends Phaser.Scene{
     this.baitChosen = baitType;
     printSuccessToConsole("Bait added: ", baitType);
 });
+
+    // rico.equip(equipment)
+        C4C.Interpreter.define('ricoequip', (equipment) => {
+        if (!this.registry.get("boughtEquip")) {
+            printWarningToConsole("You have not bought this method!");
+            return;
+        }
+        if (!equipment) {
+            printWarningToConsole("Nothing is specified to equip!");
+            return;
+        }
+        equipment = String(equipment).toLowerCase();
+
+        const equipmentMap = {
+            crown: 'boughtCrown',
+            flag: 'boughtFlag'
+        };
+        const registryKey = equipmentMap[equipment];
+        if (!registryKey) {
+            printWarningToConsole("Invalid equipment type");
+            return;
+        }
+        const isPurchased = this.registry.get(registryKey);
+        if (!isPurchased) {
+            printWarningToConsole("Equipment not purchased");
+            return;
+        }
+
+        this.textureVar = equipment;
+
+        if((this.registry.get("crownEquipped") && equipment == "flag" ) || ( this.registry.get("flagEquipped") && equipment == "crown")){
+
+            this.textureVar = "crownflag";
+        }
+
+        this.registry.set(equipment+"Equipped", true);
+        this.registry.set('playerTexture', this.textureVar);
+        this.equippedObject = equipment;
+        this.player.setTexture(this.textureVar);
+
+        printSuccessToConsole("Object equipped: ", equipment);
+    });
+
 
     C4C.Interpreter.define('manual', () => {
         printlnToConsole("---------------------");
